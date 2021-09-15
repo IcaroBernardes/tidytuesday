@@ -97,4 +97,4 @@ datum %>%
         panel.grid.minor = element_blank(),
         legend.position = "none")
 
-ggsave("clocks.png", width = 30, height = 20, units = "cm")
+ggsave("week37/clocks.png", width = 30, height = 20, units = "cm")
