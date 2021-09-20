@@ -363,11 +363,11 @@ yoyo %>%
   ggplot(aes(x = as.numeric(period), y = position)) +
   
   ## "snow flakes" (makes the saving of the graph take somewhat longer)
-  # geom_point(aes(x = x, y = y, size = size), data = flakes, shape = 8, color = "white", alpha = 0.3) +
+  geom_point(aes(x = x, y = y, size = size), data = flakes, shape = 8, color = "white", alpha = 0.3) +
   
   ## Segment tying Mariah Carey's song performance between eras
   annotate("segment", x = 6, xend = 8, y = 83, yend = 21, size = 1.5, color = "#e41a1c", linetype = "dashed") +
-
+  
   ## Lines and points showing songs peaks and evolution
   geom_line(aes(color = song_id, group = paste0(sep, song_id)), size = 2) +
   geom_point(aes(color = song_id), size = 4, stroke = 3, shape = 21, fill = "white") +
@@ -376,11 +376,13 @@ yoyo %>%
   geom_polygon(aes(x = period, y = pos), data = mount, fill = "#A8A8C0") +
   geom_polygon(aes(x = period, y = pos, group = id), data = peak, fill = "white") +
   
-  ## Title and subtitle
+  ## Title and subtitles
   annotate("text", x = -1, y = sup-4, hjust = 0, vjust = 1, size = 70,
            family = "cookie", color = "white", label = "The Christmas Yo-Yos") +
-  annotate("text", x = -1, y = sup+8, hjust = 0, vjust = 1, size = 30, family = "cookie", lineheight = lnt, color = "white",
+  annotate("text", x = -1, y = sup+7, hjust = 0, vjust = 1, size = 30, family = "cookie", lineheight = lnt, color = "white",
            label = "The most recurring songs in the Billboard chart are Christmas songs.\nThey peak in Christmas season and hibernate the rest of the year.") +
+  annotate("text", x = -1, y = sup+16, hjust = 0, vjust = 1, size = 17, family = "cookie", colour = "white",
+           label = "Source: Data.World by Sean Miller (Billboard and Spotify data) | Graphic: Ícaro Bernardes | Mariah Carey's photo: https://www.youtube.com/watch?v=k-ME-4gcB40") +
   
   ## Explanatory texts and arrows
   annotate("text", x = 0, y = 1, hjust = 0, vjust = 1, size = 22, family = "cookie", color = "white", parse = TRUE,
@@ -390,53 +392,85 @@ yoyo %>%
   annotate("text", x = 0, y = 4, hjust = 0, vjust = 1, size = 22, family = "cookie", color = "white",
            label = "make this back and forth movement...") +
   annotate("curve", x = -0.1, xend = -0.5, y = 4.5, yend = 8, arrow = arrow(length = unit(0.005, "npc")), color = "white", curvature = 0.3) +
-  annotate("text", x = 5.5, y = 95, hjust = 1, vjust = 1, size = 22, family = "cookie", color = "white", lineheight = lnt,
-           label = "For almost 50 years Christmas songs\nweren`t able to stick to the season and\ntheir presence in the list dwindled") +
+  annotate("text", x = 5.6, y = 95, hjust = 1, vjust = 1, size = 22, family = "cookie", color = "white", parse = TRUE,
+           label = '"For almost" * phantom(" 50 years ") * "Christmas songs"') +
+  annotate("text", x = 5.6, y = 95, hjust = 1, vjust = 1, size = 22, family = "cookie", color = "#F0D55E", parse = TRUE,
+           label = 'phantom("For almost") * " 50 years " * phantom("Christmas songs")') +
+  annotate("text", x = 5.6, y = 98, hjust = 1, vjust = 1, size = 22, family = "cookie", color = "white", lineheight = lnt,
+           label = "weren`t able to stick to the season and\ntheir presence in the list dwindled") +
   annotate("curve", x = 5.8, xend = 6.5, y = 100, yend = 105, arrow = arrow(length = unit(0.005, "npc")), color = "white", curvature = -0.1) +
-  annotate("text", x = 7.9, y = 67, hjust = 0, vjust = 0.5, family = "cookie", size = 22,
+  annotate("text", x = 7.2, y = 70, hjust = 0, vjust = 0.5, family = "cookie", size = 22,
            lineheight = lnt, color = "white",
            label = "...however, years later, the popularity of Carey`s song soared.\nSince then, it has consistenly appeared in the list") +
-  annotate("curve", x = 7.8, xend = 7.5, y = 67, yend = 65, arrow = arrow(length = unit(0.005, "npc")), color = "white", curvature = -0.1) +
-  annotate("text", x = 16.5, y = 57, hjust = 1, vjust = 0.5, family = "cookie", size = 22,
-           lineheight = lnt, color = "white",
-           label = '...Carey`s hit reached the seasonal top in the last years\nalognside Brenda Lee`s and Bobby Helm`s songs.\nAdditionally, more Christmas songs are making to the top 100.') +
-  annotate("curve", x = 16.7, xend = 16.5, y = 57, yend = 1, arrow = arrow(length = unit(0.005, "npc")), color = "white", curvature = 0.3) +
+  annotate("curve", x = 7.1, xend = 6.8, y = 70, yend = 68, arrow = arrow(length = unit(0.005, "npc")), color = "white", curvature = -0.1) +
+  annotate("text", x = 16.5, y = 54, hjust = 1, vjust = 1, family = "cookie", size = 22, parse = TRUE, color = "white",
+           label = '"...Carey`s hit reached the" * phantom(" seasonal top ") * "in the last years"') +
+  annotate("text", x = 16.5, y = 54, hjust = 1, vjust = 1, family = "cookie", size = 22, parse = TRUE, color = "red",
+           label = 'phantom("...Carey`s hit reached the") * " seasonal top " * phantom("in the last years")') +
+  annotate("text", x = 16.5, y = 57, hjust = 1, vjust = 1, family = "cookie", size = 22, lineheight = lnt, color = "white",
+           label = 'alognside Brenda Lee`s and Bobby Helm`s songs.\nAdditionally, more Christmas songs are making to the top 100.') +
+  annotate("curve", x = 16.7, xend = 16.3, y = 58, yend = 1.5, arrow = arrow(length = unit(0.005, "npc")), color = "white", curvature = 0.35) +
   
   ## Labels for the periods
   annotate("text", x = c(1:4,8:16), y = inf, family = "cookie", size = 22,
            lineheight = lnt, color = "white", label = levels(yoyo$period)[c(1:4,8:16)]) +
   
   ## Intermezzo label and background
-  annotate("text", x = 6, y = inf, family = "cookie", size = 26,
+  annotate("text", x = 6, y = inf, family = "cookie", size = 28,
            lineheight = lnt, color = "white", label = "The silent\nIntermezzo") +
   
-  ## Image and label presenting the songs
-  annotate("point", x = 3, y = 12, size = 15, stroke = 3,
-           shape = 21, fill = "white", color = "#ff7f00") +
-  geom_image(aes(x = 3, y = 12, image = "week38/crosby.png"), size = 0.035, by = "height") +
-  annotate("text", x = 3+gap, y = 12, hjust = 0, vjust = 0.5, family = "cookie", size = 20,
-           lineheight = lnt, color = "white", label = "...White Christmas\nby Bing Crosby") +
+  ## Presenting the songs
+  ### helms
   annotate("point", x = 1, y = 35, size = 15, stroke = 3,
            shape = 21, fill = "white", color = "#ffff33") +
   geom_image(aes(x = 1, y = 35, image = "week38/helms.png"), size = 0.035, by = "height") +
   annotate("text", x = 1-gap, y = 35, hjust = 1, vjust = 0.5, family = "cookie", size = 20,
            lineheight = lnt, color = "white", label = "...Jingle Bell Rock\nby Bobby Helms") +
+  annotate("point", x = 1-0.3, y = 35+3, size = 8, stroke = 3,
+           shape = 21, fill = "white", color = "#ffff33") +
+  annotate("text", x = 1-0.3, y = 35+3, family = "cookie", size = 15,
+           label = "35") +
+  ### lee
   annotate("point", x = 2, y = 18, size = 15, stroke = 3,
            shape = 21, fill = "white", color = "#4daf4a") +
   geom_image(aes(x = 2, y = 18, image = "week38/lee.png"), size = 0.035, by = "height") +
   annotate("text", x = 2-gap, y = 18, hjust = 1, vjust = 0.5, family = "cookie", size = 20,
            lineheight = lnt, color = "white", label = "...Rockin' Around\nThe Christmas Tree\nby Brenda Lee") +
+  annotate("point", x = 2-0.3, y = 18+3, size = 8, stroke = 3,
+           shape = 21, fill = "white", color = "#4daf4a") +
+  annotate("text", x = 2-0.3, y = 18+3, family = "cookie", size = 15,
+           label = "18") +
+  ### crosby
+  annotate("point", x = 3, y = 12, size = 15, stroke = 3,
+           shape = 21, fill = "white", color = "#ff7f00") +
+  geom_image(aes(x = 3, y = 12, image = "week38/crosby.png"), size = 0.035, by = "height") +
+  annotate("text", x = 3+gap, y = 12, hjust = 0, vjust = 0.5, family = "cookie", size = 20,
+           lineheight = lnt, color = "white", label = "...White Christmas\nby Bing Crosby") +
+  annotate("point", x = 3-0.3, y = 12+3, size = 8, stroke = 3,
+           shape = 21, fill = "white", color = "#ff7f00") +
+  annotate("text", x = 3-0.3, y = 12+3, family = "cookie", size = 15,
+           label = "12") +
+  ### cole
   annotate("point", x = 4, y = 65, size = 15, stroke = 3,
            shape = 21, fill = "white", color = "#984ea3") +
   geom_image(aes(x = 4, y = 65, image = "week38/cole.png"), size = 0.035, by = "height") +
   annotate("text", x = 4-gap, y = 65, hjust = 1, vjust = 0.5, family = "cookie", size = 20,
            lineheight = lnt, color = "white", label = "...The Christmas Song\n(Merry Christmas To You)\nby Nat King Cole") +
+  annotate("point", x = 4-0.3, y = 65+3, size = 8, stroke = 3,
+           shape = 21, fill = "white", color = "#984ea3") +
+  annotate("text", x = 4-0.3, y = 65+3, family = "cookie", size = 15,
+           label = "65") +
+  ### carey
   annotate("point", x = 6, y = 83, size = 15, stroke = 3,
            shape = 21, fill = "white", color = "#e41a1c") +
   geom_image(aes(x = 6, y = 83, image = "week38/carey.png"), size = 0.035, by = "height") +
   annotate("text", x = 6+gap, y = 83, hjust = 0, vjust = 0.5, family = "cookie", size = 22,
            lineheight = lnt, color = "white",
            label = 'The big hit, "All I Want For Christmas Is You" by Mariah Carey,\nmodestly debuted in the list in the year 2000...') +
+  annotate("point", x = 6-0.3, y = 83+3, size = 8, stroke = 3,
+           shape = 21, fill = "white", color = "#e41a1c") +
+  annotate("text", x = 6-0.3, y = 83+3, family = "cookie", size = 15,
+           label = "83") +
   
   coord_cartesian(ylim = c(inf,sup), xlim = c(lft,rgt)) +
   scale_y_reverse() +
