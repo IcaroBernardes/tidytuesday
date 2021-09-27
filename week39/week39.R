@@ -104,7 +104,6 @@ wins %>%
 ggsave("week39/biggest.png", width = 35, height = 35, units = "cm")
 
 # 3. How many shows make the HBO and Netflix winnings?
-# showpendency
 
 dependency <- emmy %>% 
   dplyr::filter(year >= 2015) %>% 
@@ -126,6 +125,7 @@ prizes <- emmy %>%
   dplyr::distinct() %>% 
   count(year, name = "prizes")
 
+## Calculates the overall prizes each distributor won each year
 overall <- dependency %>% 
   dplyr::group_by(year,distributor) %>%
   dplyr::summarise(total = sum(n)) %>% 
@@ -151,18 +151,18 @@ p <- dependency %>%
   ggplot() +
   ggdist::geom_dots(aes(x = year, y = n, fill = distributor), color = NA) +
   ## Title and subtitles
-  annotate("text", x = 2014, y = 30, hjust = 0, vjust = 1, family = "merri", size = 50, fontface = "bold.italic",
+  annotate("text", x = 2014, y = 35, hjust = 0, vjust = 1, family = "merri", size = 60, fontface = "bold.italic",
            label = "Showpendency") +
-  annotate("text", x = 2014, y = 27.7, hjust = 0, vjust = 1, family = "merri", size = 20, lineheight = 0.3, parse = TRUE,
+  annotate("text", x = 2014, y = 31, hjust = 0, vjust = 1, family = "merri", size = 20, lineheight = 0.3, parse = TRUE,
            label = "phantom('HBO') *' and '* phantom('Netflix') *' have been the top distributors (in nominations and wins) in the Emmy Awards in the recent years.'") +
-  annotate("text", x = 2014, y = 27.7, hjust = 0, vjust = 1, family = "merri", size = 20, lineheight = 0.3, parse = TRUE, color = "#3382c4",
+  annotate("text", x = 2014, y = 31, hjust = 0, vjust = 1, family = "merri", size = 20, lineheight = 0.3, parse = TRUE, color = "#3382c4",
            label = "'HBO'* phantom(' and ') * phantom('Netflix') * phantom('have been the top distributors (in nominations and wins) in the Emmy Awards in the recent years.')") +
-  annotate("text", x = 2014, y = 27.7, hjust = 0, vjust = 1, family = "merri", size = 20, lineheight = 0.3, parse = TRUE, color = "#e50913",
+  annotate("text", x = 2014, y = 31, hjust = 0, vjust = 1, family = "merri", size = 20, lineheight = 0.3, parse = TRUE, color = "#e50913",
            label = "phantom('HBO') * phantom(' and ') *'Netflix'* phantom('have been the top distributors (in nominations and wins) in the Emmy Awards in the recent years.')") +
-  ggtext::geom_richtext(aes(x = 2014, y = 26.5), hjust = 0, vjust = 1, family = "merri", size = 20,
+  ggtext::geom_richtext(aes(x = 2014, y = 29.7), hjust = 0, vjust = 1, family = "merri", size = 20,
                         fill = NA, label.color = NA,  label.padding = grid::unit(rep(0, 4), "pt"),
                         label = "How the **concentration** of wins in some shows affects their perfomance?") +
-  annotate("text", x = 2014, y = 25.4, hjust = 0, vjust = 1, family = "merri", size = 10, lineheight = 0.3,
+  annotate("text", x = 2014, y = 28.3, hjust = 0, vjust = 1, family = "merri", size = 10, lineheight = 0.3,
            label = "Source: emmys.com | Graphic: Ícaro Bernardes (https://github.com/IcaroBernardes/tidytuesday/tree/main/week39)") +
   ## Overall performance
   geom_rect(aes(xmin = year, xmax = yearmax, ymin = 20+pos, ymax = 21+pos, fill = distributor), data = overall) +
@@ -188,18 +188,33 @@ p <- dependency %>%
                         hjust = 0, vjust = 0.5, label.colour = NA, text.colour = "black", fill = "white", size = 12, lineheight = 0.3) +
   annotate("curve", x = 2015.3, xend = 2015.05, y = 15, yend = 12.5,
            arrow = arrow(length = unit(0.007, "npc")), curvature = 0.3) + 
-  annotate("text", x = 2018, y = 24, family = "merri", size = 12, lineheight = 0.3,
+  annotate("text", x = 2018, y = 25, family = "merri", size = 12, lineheight = 0.3,
            label = "Netflix sprang from a supporting role to the lead in a few years\nMeanwhile, HBO performed unesteadly.") +
-  annotate("curve", x = 2016.55, xend = 2015.3, y = 24, yend = 22,
+  annotate("curve", x = 2016.55, xend = 2015.3, y = 25, yend = 22,
            arrow = arrow(length = unit(0.007, "npc")), curvature = 0.2) + 
-  annotate("curve", x = 2019.44, xend = 2021.2, y = 24, yend = 23,
+  annotate("curve", x = 2019.44, xend = 2021.2, y = 25, yend = 23,
            arrow = arrow(length = unit(0.007, "npc")), curvature = -0.1) +
-  ggtext::geom_richtext(aes(x = 2020.4, y = 14, family = "merri",
-                            label = "While HBO winners are a few <strong style='color:white;'>heavy-hitters,</strong><br>Netflix has many shows that snatch one or two prizes."),
-                        hjust = 1, vjust = 0.5, label.colour = NA, text.colour = "black", fill = "white", size = 12, lineheight = 0.3) +
-  geom_rect(aes(xmin = 2019.8, xmax = 2020.4, ymin = 14, ymax = 14.3), fill = "#3382c4") +
+  geom_rect(aes(xmin = 2017.9, xmax = 2020.4, ymin = 12.9, ymax = 14.6), fill = "white") +
+  geom_rect(aes(xmin = 2019.74, xmax = 2020.41, ymin = 13.7, ymax = 14.3), fill = "#3382c4") +
+  geom_rect(aes(xmin = 2019.58, xmax = 2020.08, ymin = 13.1, ymax = 13.7), fill = "#e50913") +
+  annotate("curve", x = 2020.45, xend = 2020.13, y = 14, yend = 10.9,
+           arrow = arrow(length = unit(0.007, "npc")), curvature = -0.9) +
+  annotate("curve", x = 2019.85, xend = 2019.5, y = 13, yend = 2.5,
+           arrow = arrow(length = unit(0.007, "npc")), curvature = -0.1) +
+  annotate("text", x = 2020.4, y = 14, family = "merri",
+           hjust = 1, vjust = 0.5, size = 12, lineheight = 0.3, parse = TRUE,
+           label = "'While HBO winners are a handful of ' * phantom(' heavy-hitters,')") +
+  annotate("text", x = 2020.4, y = 14, family = "merri", parse = TRUE,
+           hjust = 1, vjust = 0.5, size = 12, lineheight = 0.3, color = "white", fontface = "bold",
+           label = "phantom('While HBO winners are a handful of ') * ' heavy-hitters,'") +
+  annotate("text", x = 2020.4, y = 13.4, family = "merri",
+           hjust = 1, vjust = 0.5, size = 12, lineheight = 0.3, parse = TRUE,
+           label = "'Netflix has many shows that snatch ' * phantom(' one or two ') * ' prizes.'") +
+  annotate("text", x = 2020.4, y = 13.4, family = "merri", color = "white", fontface = "bold",
+           hjust = 1, vjust = 0.5, size = 12, lineheight = 0.3, parse = TRUE,
+           label = "phantom('Netflix has many shows that snatch ') * ' one or two ' * phantom(' prizes.')") +
   scale_x_continuous(breaks = 2015:2021) +
-  scale_y_continuous(limits = c(-3,30)) + 
+  scale_y_continuous(limits = c(-3,35)) + 
   scale_fill_manual(values = c("#3382c4","#e50913"), breaks = c("HBO","Netflix")) +
   scale_color_manual(values = c("#3382c4","#e50913"), breaks = c("HBO","Netflix")) +
   theme_ipsum() +
@@ -212,4 +227,5 @@ p <- dependency %>%
         legend.position = "none")
 
 ## Saves the plot
-ggsave("week39/showpendency.png", plot = p, width = 40, height = 30, units = "cm")
+ggsave("week39/showpendency.png", plot = p, width = 40, height = 25, units = "cm")
+
