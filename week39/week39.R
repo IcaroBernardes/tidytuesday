@@ -7,20 +7,13 @@ library(showtext)
 library(ggtext)
 library(ggdist)
 
-# library(stringdist)
-# library(lubridate)
-# library(ggimage)
-# library(scales)
-
 ## Add Google Font
-font_add_google(name = "Amiri", family = "amiri")
 font_add_google(name = "Merriweather", family = "merri")
 
 # 1. Data download
 tuesdata <- tidytuesdayR::tt_load('2021-09-21')
 emmy <- tuesdata$nominees
 
-# 2. Biggest distributors plot
 ## Obtains which are the top 75% distributors (by nomination) from 2015 to the present
 big <- emmy %>% 
   dplyr::filter(year >= 2015) %>% 
@@ -32,79 +25,7 @@ big <- emmy %>%
   dplyr::mutate(pct = round(100*cumsum(n)/sum(n))) %>% 
   dplyr::filter(pct <= 75)
 
-## Obtains yearly winnings
-biggest <- big %>% 
-  dplyr::select(distributor) %>% 
-  dplyr::pull()
-
-shows <- emmy %>% 
-  dplyr::filter(year >= 2015) %>% 
-  dplyr::filter(type == "Winner") %>%
-  dplyr::filter(distributor %in% biggest) %>% 
-  dplyr::select(category,title,distributor,year) %>% 
-  distinct()
-
-## Addresses old and recent merges and buys between companies
-### HBO and CNN are controlled by WarnerMedia
-### ABC is controlled by Disney
-### March 2019: FX Networks is controlled by Disney
-### March 2019: FOX is controlled by Disney
-### March 2019: National Geographic is controlled by Disney
-### Before 2019: FX Networks, FOX and National Geographic are controlled by 21st Century Fox
-
-wins <- shows %>% 
-  count(distributor, year) %>% 
-  dplyr::mutate(distributor = str_replace_all(distributor, "HBO|CNN", "WarnerMedia")) %>% 
-  dplyr::mutate(distributor = str_replace_all(distributor, "ABC", "Disney")) %>% 
-  dplyr::mutate(distributor = str_replace_all(distributor, "Disney\\+", "Disney")) %>% 
-  dplyr::mutate(distributor = ifelse(distributor %in% c("FX Networks", "FOX", "National Geographic") & year > 2019, "Disney", distributor)) %>% 
-  dplyr::mutate(distributor = ifelse(distributor %in% c("FX Networks", "FOX", "National Geographic") & year <= 2019, "21st Century Fox", distributor)) %>% 
-  dplyr::group_by(distributor, year) %>% 
-  dplyr::summarise(wins = sum(n)) %>% 
-  ungroup()
-
-shows <- shows %>% 
-  dplyr::mutate(distributor = str_replace_all(distributor, "HBO|CNN", "Time Warner")) %>% 
-  dplyr::mutate(distributor = str_replace_all(distributor, "ABC", "Disney")) %>% 
-  dplyr::mutate(distributor = str_replace_all(distributor, "Disney\\+", "Disney")) %>% 
-  dplyr::mutate(distributor = ifelse(distributor %in% c("FX Networks", "FOX", "National Geographic") & year > 2019, "Disney", distributor)) %>% 
-  dplyr::mutate(distributor = ifelse(distributor %in% c("FX Networks", "FOX", "National Geographic") & year <= 2019, "21st Century Fox", distributor)) %>% 
-  count(distributor, title, year) %>% 
-  left_join(wins) %>% 
-  dplyr::mutate(pct = round(100*n/wins)) %>% 
-  dplyr::group_by(distributor, year) %>% 
-  dplyr::filter(n == max(n)) %>% 
-  dplyr::arrange(distributor, year, desc(n))
-
-## Allows the use of the downloaded Google Font
-## To see the results updated, it's needed to call windows() or save the image
-showtext_auto()
-
-wins %>% 
-  ggplot(aes(x = year, y = wins)) +
-  geom_point(aes(color = distributor), size = 4) +
-  geom_line(aes(color = distributor), size = 2) +
-  annotate("point", x = 2015, y = 46, size = 6) +
-  geom_richtext(aes(x = 2015.5, y = 49,
-                    label = "WarnerMedia is represented here<br>by the giants of entertainement and news,<br>
-                Game of Thrones is the company stallion."),
-                hjust = 0, vjust = 0.5, label.color = NA, size = 22, family = "amiri", lineheight = 0.3) +
-  annotate("text", x = 2018.6, y = 50, hjust = 0, vjust = 0, size = 22, family = "amiri", label = "and") +
-  geom_image(aes(x = 2018.4, y = 50, image = "week39/HBO.png", by = "width")) +
-  geom_image(aes(x = 2019, y = 50, image = "week39/CNN.png", by = "width")) +
-  labs(x = "Year", y = "Prizes") +
-  scale_x_continuous(n.breaks = 7) +
-  theme_ipsum() +
-  theme(panel.grid.minor = element_blank(),
-        axis.text.x = element_text(size = 70, family = "amiri"),
-        axis.text.y = element_text(size = 70, family = "amiri"),
-        axis.title.x = element_text(size = 100, family = "amiri"))
-
-## Saves the plot
-ggsave("week39/biggest.png", width = 35, height = 35, units = "cm")
-
-# 3. How many shows make the HBO and Netflix winnings?
-
+# 2. How distributed between shows are the HBO and Netflix awards?
 dependency <- emmy %>% 
   dplyr::filter(year >= 2015) %>% 
   dplyr::filter(type == "Winner") %>% 
