@@ -110,7 +110,7 @@ p <- dependency %>%
   annotate("curve", x = 2015.3, xend = 2015.05, y = 15, yend = 12.5,
            arrow = arrow(length = unit(0.007, "npc")), curvature = 0.3) + 
   annotate("text", x = 2018, y = 25, family = "merri", size = 12, lineheight = 0.3,
-           label = "Netflix sprang from a supporting role to the lead in a few years\nMeanwhile, HBO performed unesteadly.") +
+           label = "Netflix sprang from a supporting role to the lead in a few years\nMeanwhile, HBO performed inconsistently.") +
   annotate("curve", x = 2016.55, xend = 2015.3, y = 25, yend = 22,
            arrow = arrow(length = unit(0.007, "npc")), curvature = 0.2) + 
   annotate("curve", x = 2019.44, xend = 2021.2, y = 25, yend = 23,
