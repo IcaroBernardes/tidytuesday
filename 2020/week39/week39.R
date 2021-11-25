@@ -148,5 +148,5 @@ p <- dependency %>%
         legend.position = "none")
 
 ## Saves the plot
-ggsave("week39/showpendency.png", plot = p, width = 40, height = 25, units = "cm")
+ggsave("2020/week39/showpendency.png", plot = p, width = 40, height = 25, units = "cm")
 

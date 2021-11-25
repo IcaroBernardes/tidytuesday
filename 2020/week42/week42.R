@@ -272,5 +272,5 @@ p <- p +
   patchwork::inset_element(p1, 0.58, 0.56, 0.73, 0.71, on_top = FALSE)
 
 ## Saves the plot
-ggsave("week42/waste.png", plot = p, width = 70, height = 40, units = "cm")
+ggsave("2020/week42/waste.png", plot = p, width = 70, height = 40, units = "cm")
 

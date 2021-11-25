@@ -301,5 +301,5 @@ p <- ggplot() +
                            bottom = 0.091, top = 0.636)
 
 ## Saves the plot
-ggsave("week43/pollinator.png", plot = p, width = 40, height = 40, units = "cm")
+ggsave("2020/week43/pollinator.png", plot = p, width = 40, height = 40, units = "cm")
 

@@ -359,4 +359,4 @@ p <- p +
   inset_element(p4, left = 0.795, bottom = 0.13, right = 0.955, top = 0.29)
 
 ## Saves the plot
-ggsave("week41/nurse.png", plot = p, width = 45, height = 25, units = "cm")
+ggsave("2020/week41/nurse.png", plot = p, width = 45, height = 25, units = "cm")

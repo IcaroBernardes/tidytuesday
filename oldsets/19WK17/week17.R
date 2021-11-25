@@ -1,13 +1,10 @@
 # 0. Library management
-library(tidytuesdayR)
 library(tidyverse)
 library(ggplot2)
 library(showtext)
 library(readr)
-library(patchwork)
-library(biscale)
-library(glue)
-# library(hrbrthemes)
+library(fastDummies)
+library(ComplexHeatmap)
 
 ## Adding Google Fonts
 font_add_google(name = "Josefin Sans", family = "josefin") ### Sans Serif
@@ -20,78 +17,110 @@ serif <- "antic"
 showtext::showtext_auto()
 
 # 1. Data download, load and handling
-ultra_rankings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-26/ultra_rankings.csv')
-race <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-26/race.csv')
+## Reads raw data
+raw_df <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-04-23/raw_anime.csv")
 
+## Cleans up some of the data
+clean_df <- raw_df %>% 
+  # Producers
+  mutate(producers = str_remove(producers, "\\["),
+         producers = str_remove(producers, "\\]")) %>% 
+  separate_rows(producers, sep = ",") %>% 
+  mutate(producers = str_remove(producers, "\\'"),
+         producers = str_remove(producers, "\\'"),
+         producers = str_trim(producers)) %>% 
+  # Genre
+  mutate(genre = str_remove(genre, "\\["),
+         genre = str_remove(genre, "\\]")) %>% 
+  separate_rows(genre, sep = ",") %>% 
+  mutate(genre = str_remove(genre, "\\'"),
+         genre = str_remove(genre, "\\'"),
+         genre = str_trim(genre)) %>% 
+  # Studio
+  mutate(studio = str_remove(studio, "\\["),
+         studio = str_remove(studio, "\\]")) %>% 
+  separate_rows(studio, sep = ",") %>% 
+  mutate(studio = str_remove(studio, "\\'"),
+         studio = str_remove(studio, "\\'"),
+         studio = str_trim(studio)) %>% 
+  # Aired
+  mutate(aired = str_remove(aired, "\\{"),
+         aired = str_remove(aired, "\\}"),
+         aired = str_remove(aired, "'from': "),
+         aired = str_remove(aired, "'to': "),
+         aired = word(aired, start = 1, 2, sep = ",")) %>% 
+  separate(aired, into = c("start_date", "end_date"), sep = ",") %>% 
+  mutate(start_date = str_remove_all(start_date, "'"),
+         start_date = str_sub(start_date, 1, 10),
+         end_date = str_remove_all(start_date, "'"),
+         end_date = str_sub(end_date, 1, 10)) %>%
+  mutate(start_date = lubridate::ymd(start_date),
+         end_date = lubridate::ymd(end_date)) %>% 
+  # Drop unranked or unpopular series
+  filter(rank != 0,
+         popularity != 0)
+
+## Creates dummy variables for the genres
+df <- clean_df %>% 
+  dplyr::filter(genre != "") %>% 
+  dplyr::distinct(animeID, genre) %>%
+  fastDummies::dummy_cols("genre", remove_selected_columns = TRUE) %>% 
+  dplyr::group_by(animeID) %>% 
+  dplyr::summarise(across(.fns = sum)) %>% 
+  dplyr::ungroup()
+
+## Gets the top 10 most frequent genres
+top <- df %>% 
+  dplyr::select(-animeID) %>% 
+  dplyr::summarise(across(.fns = sum)) %>% 
+  tidyr::pivot_longer(cols = everything()) %>% 
+  dplyr::arrange(desc(value)) %>% 
+  dplyr::slice(1:10) %>% 
+  dplyr::pull(name)
+
+## Keeps only the animes and genres of the top 10
+df <- df %>% 
+  dplyr::select(animeID, top) %>% 
+  tibble::column_to_rownames("animeID") %>% 
+  dplyr::filter(if_any(.fns =  ~(. == 1)))
+
+## Subsets the data by genre and gets all sets of genres for each subset
+mat <- colnames(df) %>% 
+  purrr::map(list) %>% 
+  purrr::map(~rlang::sym(.x[[1]])) %>% 
+  purrr::map(~df %>% dplyr::filter(!!.x == 1)) %>% 
+  purrr::map(ComplexHeatmap::make_comb_mat)
+
+## Gets the top 5 sets of genres associated to each genre 
+size <- mat %>% 
+  purrr::map(ComplexHeatmap::comb_size) %>% 
+  purrr::map(sort, decreasing = TRUE) %>% 
+  purrr::map(~.x[1:5])
+
+sets <- size %>% 
+  purrr::map(names) %>% 
+  purrr::map(~tibble(vars = .x)) %>% 
+  purrr::map(~.x %>% tidyr::separate(vars, into = paste0("var",1:10), sep = 1:9)) %>% 
+  purrr::map(~.x %>% dplyr::mutate(across(.fns = ~as.logical(as.numeric(.)))))
+
+
+
+
+# df <- clean_df %>% 
+#   dplyr::filter(genre != "") %>% 
+#   dplyr::distinct(animeID, genre) %>% 
+#   dplyr::group_by(animeID) %>% 
+#   dplyr::rename("source" = "genre") %>% 
+#   dplyr::mutate(target = source) %>% 
+#   tidyr::expand(source, target) %>% 
+#   dplyr::filter(source != target) %>% 
+#   dplyr::ungroup() %>% 
+#   dplyr::count(source, target)
+  
+  
 # 2. Comparing estimated and actual time of the group of runners
-pace <- race %>% 
-  dplyr::mutate(htime = distance/4,
-                vtime = (elevation_gain/300)+(-elevation_loss/500)) %>%
-  dplyr::rowwise() %>% 
-  dplyr::mutate(DINtime = max(htime,vtime) + (min(htime,vtime))/2) %>% 
-  dplyr::filter(DINtime != 0 & !is.na(DINtime)) %>% 
-  full_join(ultra_rankings) %>% 
-  dplyr::filter(!is.na(time_in_seconds)) %>% 
-  dplyr::filter(runner != "NO Participants") %>% 
-  dplyr::mutate(time = time_in_seconds/3600) %>% 
-  dplyr::group_by(race_year_id) %>% 
-  dplyr::summarise(time = median(time),
-                   DINtime = unique(DINtime),
-                   htime = unique(htime),
-                   vtime = unique(vtime)) %>% 
-  na.exclude()
 
-## Creates a variable dividing the points in categories
-## according to two variables quantiles (vtime and htime)
-pace <- biscale::bi_class(pace, x = htime, y = vtime, style = "quantile", dim = 3)
 
-## Creates data for the bicolor palette
-colors <- biscale::bi_pal("DkBlue", 3, FALSE)
-bicolor <- tibble(
-  x = c(rep(140,3),rep(130,3),rep(120,3)),
-  y = rep(c(90,80,70),3),
-  c = colors,
-  label = paste0(c(rep(75,3),rep(50,3),rep(25,3)),"% (H)\n",
-                 rep(c(75,50,25),3),"% (V)")
-)
-
-## Makes a linear model with DIN time as predictor and time as predicted
-model <-  lm(time ~ DINtime, data = pace)
-
-## Gets the model coefficients
-intercept <- coefficients(model)[1]
-slope <- coefficients(model)[2]
-
-## Plots histogram for the horizontal and vertical times of each race
-bins <- ceiling(1 + log2(dim(pace)[1]))
-
-hist1 <- pace %>% 
-  ggplot(aes(x = htime)) +
-  geom_histogram(aes(fill = ..x..), bins = bins) +
-  scale_fill_gradient(low = colors[9], high = colors[3]) +
-  labs(x = "Horizontal time (h)", y = "Count") +
-  theme_ipsum() +
-  theme(legend.position = "none",
-        axis.title.x = element_text(size = 50, family = sans),
-        axis.title.y = element_text(size = 50, family = sans),
-        axis.text.x = element_text(size = 30, family = sans),
-        axis.text.y = element_text(size = 30, family = sans),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
-
-hist2 <- pace %>% 
-  ggplot(aes(x = vtime)) +
-  geom_histogram(aes(fill = ..x..), bins = bins) +
-  scale_fill_gradient(low = colors[9], high = colors[7]) +
-  labs(x = "Vertical time (h)", y = "Count") +
-  theme_ipsum() +
-  theme(legend.position = "none",
-        axis.title.x = element_text(size = 50, family = sans),
-        axis.title.y = element_text(size = 50, family = sans),
-        axis.text.x = element_text(size = 30, family = sans),
-        axis.text.y = element_text(size = 30, family = sans),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
 
 ## Creates data for the axis
 {
@@ -319,5 +348,5 @@ p <- pace %>%
                            left = a1*170+b1, right = a1*250+b1,
                            bottom = a2*-10+b2, top = a2*60+b2)
 ## Saves the plot
-ggsave("week44/pace.png", plot = p, width = 58, height = 25, units = "cm")
+ggsave("2020/week44/pace.png", plot = p, width = 58, height = 25, units = "cm")
 

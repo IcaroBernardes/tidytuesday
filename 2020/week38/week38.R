@@ -148,7 +148,7 @@ loud %>%
         plot.caption = element_text(size = 20, colour = "white", hjust = 0, family = "oswald", lineheight = 0.4))
 
 ## Saves the plot
-ggsave("week38/loudness.png", width = 40, height = 20, units = "cm")
+ggsave("2020/week38/loudness.png", width = 40, height = 20, units = "cm")
 
 # 3. The Christmas Market plot
 ## List of songs of interest
@@ -489,5 +489,5 @@ yoyo %>%
   )
 
 ## Saves the plot
-ggsave("week38/christmas.png", width = 35, height = 35, units = "cm")
+ggsave("2020/week38/christmas.png", width = 35, height = 35, units = "cm")
 

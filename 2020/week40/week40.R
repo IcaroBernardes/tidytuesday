@@ -306,5 +306,5 @@ p <- themes %>%
         legend.position = "none")
 
 ## Saves the plot
-ggsave("week40/buzzwords.png", plot = p, width = 60, height = 15, units = "cm")
+ggsave("2020/week40/buzzwords.png", plot = p, width = 60, height = 15, units = "cm")
 
