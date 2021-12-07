@@ -89,8 +89,8 @@ stats <- tibble(
     ~.x %>% dplyr::summarise(
       games = sum(ifelse((team1 == team) | (team2 == team), 1, 0)),
       wins = sum(ifelse(winner == team, 1, 0))
-      )
-    )) %>% 
+    )
+  )) %>% 
   tidyr::unnest(data) %>% 
   dplyr::rename("var0" = "team")
 
@@ -192,8 +192,8 @@ p <- df %>%
 
 ## Creates text of the titles
 title <- "Stick\nTo\nThe\nBest"
-sub1 <-  "Ten teams\nplayed 95% of\nall registered\nmacthes of\nCricket in\nthe One Day\nInternational\nformat.\n\nThe cards in\nthe right show\nhow many\nvictories each\nteam had\non different\ncoditions."
-sub2 <- "Data: ESPN\nCricinfo\nby way of\nHassanasir\n\nGraphic: Ícaro\nBernardes\n@IcaroBSC"
+sub1 <- "Ten teams\nplayed 95% of\nall registered\nmacthes of\nCricket in\nthe One Day\nInternational\nformat.\n\nThe cards in\nthe right show\nhow many\nvictories each\nteam had\non different\ncoditions."
+sub2 <- "Data: ESPN\nCricinfo\nby way of\nHassanasir\n\nFlag icons:\nFlaticon\n\nGraphic: Ícaro\nBernardes\n@IcaroBSC"
 
 ## Creates the table
 p <- df %>% 
@@ -226,4 +226,3 @@ p <- df %>%
 ## Saves the plot
 ggsave("2021/week49/cards.png", plot = p, dpi = "retina",
        width = 20*asp_ratio, height = 20) ## Makes the width equivalent to the aspect ratio
-
