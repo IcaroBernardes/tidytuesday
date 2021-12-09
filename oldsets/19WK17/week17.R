@@ -5,6 +5,9 @@ library(showtext)
 library(readr)
 library(fastDummies)
 library(ComplexHeatmap)
+library(tm)
+library(stringi)
+library(tidytext)
 
 ## Adding Google Fonts
 font_add_google(name = "Josefin Sans", family = "josefin") ### Sans Serif
@@ -151,13 +154,46 @@ names <- top %>%
                 y2 = 1:10,
                 x2 = 1,
                 y3 = 1:10,
-                x3 = 1+0.06*stringr::str_length(genre))
+                x3 = 1+0.058*stringr::str_length(genre))
+
+## Gets the most used word in the synopses of animes in a shared genre
+synop <- clean_df %>% 
+  dplyr::distinct(animeID, synopsis)
+stop <- tm::stopwords(kind = "SMART")
+stop <- c(stop, "source", "ann", "mal", "written", "world", "rewrite")
+
+words <- purrr::map(top$genre, ~.x) %>% 
+  purrr::map(
+    ~df %>%
+      dplyr::select(.x) %>% 
+      dplyr::filter(across(.fns = (~.==1))) %>% 
+      rownames() %>% 
+      as.numeric()
+  ) %>% 
+  purrr::imap(
+    ~synop %>% 
+      dplyr::filter(animeID %in% .x) %>% 
+      dplyr::select(synopsis) %>% 
+      dplyr::mutate(synopsis = tolower(synopsis)) %>% 
+      dplyr::mutate(synopsis = tm::removePunctuation(synopsis)) %>%
+      dplyr::mutate(synopsis = stringi::stri_trans_general(synopsis, id = "Latin-ASCII")) %>% 
+      dplyr::mutate(synopsis = tm::removeNumbers(synopsis)) %>% 
+      dplyr::mutate(synopsis = tm::removeWords(synopsis, stop)) %>% 
+      dplyr::mutate(synopsis = tm::stripWhitespace(synopsis)) %>% 
+      tidytext::unnest_tokens(txt, synopsis) %>% 
+      dplyr::count(txt) %>% 
+      dplyr::arrange(desc(n)) %>% 
+      dplyr::slice(1:20) %>% 
+      dplyr::mutate(var = .y)
+  ) %>% 
+  purrr::map_dfr(~.x)
 
 p <- sets %>% 
   ggplot(aes(x = x, y = -y)) +
   
   geom_point(aes(color = color)) +
-  geom_text(aes(label = n), family = mono, size = 5, data = size) +
+  geom_text(aes(label = n), family = mono,
+            hjust = 0, size = 5, data = size) +
   
   geom_text(aes(x = x1, y = -y1, label = genre, color = color),
             hjust = 0, size = 30, family = mono, data = names) +
