@@ -124,10 +124,11 @@ families <- lines %>%
 ## Creates data for the titles
 titles <- tibble(
   x = -150,
-  y = c(1950,1670,1380),
-  size = c(180,43,38),
+  y = c(1950,1670,1380,1150),
+  size = c(180,43,43,38),
   label = c("A Wrapping Land",
             "Brazil often is mentioned (3910) in the World Spider Database.\nThis snaring land of beauty and spiders has less\nspecies than China (5192) and Australia (5118),\nbut more than the US (3596)",
+            "Graphic shows the biggest families\nof species that comprise 75% of all\nspider species in the country",
             "Data from: World Spider Database\nGraphic by: Ícaro Bernardes | @IcaroBSC")
 )
 
