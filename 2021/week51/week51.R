@@ -142,11 +142,11 @@ inset <- strips %>%
 ## Creates the titles
 titles <- tibble(
   x = 0,
-  y = c(4,3.45,0.27),
-  size = c(80,28,20),
+  y = c(4,3.55,0.27),
+  size = c(80,26,20),
   label = c(
     "**Spicy Content**",
-    "The Spice Girls made three studio albuns.<br>The heatmaps on the right show five<br>features of the CD's tracks explained bellow<br>(from the outermost arc to the innermost):",
+    "The Spice Girls made three studio albuns.<br>The heatmaps on the right show five features<br>of the CD's tracks which are explained bellow<br>(from the outermost arc to the innermost).<br>Darker colors mean higher values:",
     "Data: Jacquie Tran through Spotify and Genius<br>Graphic: Ícaro Bernardes | @IcaroBSC<br>CD's covers: Virgin Records"
   )
 )
