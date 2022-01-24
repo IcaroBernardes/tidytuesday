@@ -42,43 +42,43 @@ baresbr <- readRDS("extras/baresbr/data/baresbr.RDS") %>%
 numbars <- baresbr %>% 
   dplyr::count(code_muni, name = "bars")
 
-## Downloads the outline geometries of the states
-## and federal district and eliminates small islands
-ufs <- geobr::read_state(code_state = "all", year = 2020) %>% 
-  dplyr::mutate(geom = rmapshaper::ms_simplify(geom))
+## Loads the outline geometries of the states and federal district
+## with eliminated small islands and complexity. Alternative code
+## to download from IPEA and simplify geometry is commented bellow
+# ufs <- geobr::read_state(code_state = "all", year = 2020) %>%
+#   dplyr::mutate(geom = rmapshaper::ms_simplify(geom)) %>%
+#   saveRDS("extras/baresbr/data/ufs.RDS")
+ufs <- readRDS("extras/baresbr/data/ufs.RDS")
 
-## Downloads the outline geometry of the country and eliminates small islands
-br <- geobr::read_country(year = 2020) %>% 
-  dplyr::mutate(geom = rmapshaper::ms_simplify(geom))
+## Loads the outline geometry of the country with eliminated small
+## islands and complexity. Alternative code to download from IPEA
+## and simplify geometry is commented bellow
+# br <- geobr::read_country(year = 2020) %>%
+#   dplyr::mutate(geom = rmapshaper::ms_simplify(geom)) %>% 
+#   saveRDS("extras/baresbr/data/br.RDS")
+br <- readRDS("extras/baresbr/data/br.RDS")
 
-## Downloads the geometry of the municipalities, simplifies it even more
-## (eliminates islands) and joins the bars, area and population data
-mun <- geobr::read_municipality(code_muni = "all", year = 2020) %>% 
-  dplyr::mutate(geom = rmapshaper::ms_simplify(geom, keep = 0.12)) %>% 
-  dplyr::left_join(numbars) %>% 
-  dplyr::left_join(area) %>% 
+## Loads the outline geometry of the municipalities with eliminated small
+## islands and complexity. Alternative code to download from IPEA
+## and simplify geometry is commented bellow
+# mun <- geobr::read_municipality(code_muni = "all", year = 2020) %>%
+#   dplyr::mutate(geom = rmapshaper::ms_simplify(geom, keep = 0.12)) %>% 
+#   saveRDS("extras/baresbr/data/mun.RDS")
+mun <- readRDS("extras/baresbr/data/mun.RDS")
+
+## Joins all data (by city code)
+mun <- mun %>%
+  dplyr::left_join(numbars) %>%
+  dplyr::left_join(area) %>%
   dplyr::left_join(population)
 
 ## Creates a function that takes a value between 0 and 1 and gives RGB numeric
 ## values resulting from the interpolation of two colors
-colormaker1 <- grDevices::colorRamp(c('#f7fcf5','#e5f5e0','#c7e9c0','#a1d99b','#74c476','#41ab5d'))
+colormaker1 <- grDevices::colorRamp(c('#f7fcf5','#e5f5e0','#c7e9c0','#a1d99b','#74c476'))
 colormaker2 <- grDevices::colorRamp(c('#238b45','#006d2c','#00441b'))
 
 ## Calculates the bar density in the municipalities (by area and by population),
 ## also creates a color scale based in the amount of bars
-# mun <- mun %>%
-#   dplyr::mutate(bars = ifelse(is.na(bars), 0, bars),
-#                 dens = bars/area,
-#                 abund = bars/pop) %>%
-#   dplyr::mutate(fill = ifelse(bars <= 200, bars, NA),
-#                 fill = scales::rescale(fill, from = c(0,200), to = c(0,1))) %>% 
-#   dplyr::rowwise() %>% 
-#   dplyr::mutate(fill = ifelse(is.na(fill),
-#                               "#004529",
-#                               grDevices::rgb(colormaker(fill), maxColorValue = 255))) %>%
-#   dplyr::ungroup()
-
-
 mun <- mun %>%
   dplyr::mutate(bars = ifelse(is.na(bars), 0, bars),
                 dens = bars/area,
@@ -193,7 +193,7 @@ titles <- tibble(
 acknowledgments <- tibble(
   x = 18,
   y = 27,
-  label = "Data from Base dos Dados\n(https://basedosdados.org)\nthrough Fernando Barbalho (@barbalhofernand)\nGraphic by Ícaro Bernardes (@IcaroBSC)"
+  label = 'Data from Base dos Dados (https://basedosdados.org) and\nqueried by Fernando Barbalho (@barbalhofernand).\nThe data contains only registered business\nthat have the word "bar" in the name.\nGraphic by Ícaro Bernardes (@IcaroBSC)'
 )
 
 ## Creates coordinates for instructions
@@ -210,9 +210,9 @@ instructions <- tibble(
 
 ## Creates coordinates for the examples lines
 line_instr <- tibble(
-  x = c(-16.3,-16.3,-20,
+  x = c(-12.3,-12.3,-16,
         5.4,5.4,9),
-  xend = c(-16.3,-20,-23,
+  xend = c(-12.3,-16,-19,
            5.4,9,12),
   y = c(14,15,15,
         10,11,11),
@@ -511,14 +511,14 @@ p <- mun %>%
             family = sans, hjust = 0, vjust = 1,
             lineheight = lnhgt, data = instructions) +
   
-  ### Places examples
+  ### Places city examples
   geom_segment(aes(x = x, xend = xend, y = y, yend = yend), data = line_instr) +
-  ggplot2::annotate("text", x = -16, y = 15, size = 10, family = sans,
+  ggplot2::annotate("text", x = -12, y = 15, size = 10, family = sans,
                     lineheight = lnhgt, hjust = 0,
-                    label = glue::glue("{city_low$name_muni} ({city_low$abbrev_state})\nhas {city_low$bars} bars")) +
+                    label = glue::glue("{city_low$name_muni} ({city_low$abbrev_state}) has\n{city_low$bars} registered bars")) +
   ggplot2::annotate("text", x = 5, y = 11, size = 10, family = sans,
                     lineheight = lnhgt, hjust = 1,
-                    label = glue::glue("{city_high$name_muni} ({city_high$abbrev_state})\nhas {round(city_high$bars/1000)}K bars")) +
+                    label = glue::glue("{city_high$name_muni} ({city_high$abbrev_state}) has\n{round(city_high$bars/1000)}K registered bars")) +
   
   ### Places the highlights
   geom_text(aes(x = x, y = y, label = label, size = I(size), fontface = I(fontface)),
@@ -544,7 +544,7 @@ p <- mun %>%
   ### Places the shapes of the illustrative cities
   patchwork::inset_element(howto_high, left = 0.85, right = 0.95,
                            bottom = 0.71, top = 0.81, on_top = FALSE) +
-  patchwork::inset_element(howto_low, left = 0.51, right = 0.61,
+  patchwork::inset_element(howto_low, left = 0.55, right = 0.65,
                            bottom = 0.71, top = 0.81, on_top = FALSE) +
   
   ### Places info about the the themes of bar names
