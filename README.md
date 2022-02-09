@@ -2,6 +2,11 @@
 
 This is my space to experiment with Data Viz and Data Handling! Feel free to copy any solutions that you find.
 
+## Extras
+### Beer Project
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
+
 ## 2021
 ### Week 51 - Spice Girls
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2021/week51/week51.R
