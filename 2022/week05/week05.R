@@ -167,7 +167,7 @@ legendICON <- tibble(
 
 legendTITLE <- tibble(
   x = lubridate::ymd("1938-1-1"),
-  y = top_grid-0.5,
+  y = top_grid-0.3,
   label = "DOWNED<br>ENEMY PLANES",
 )
 
@@ -184,8 +184,8 @@ insights <- tibble(
                      c("1943-7-1"),
                      c("1944-9-15"),
                      c("1945-1-1"),
-                     c("1948-1-15")),
-  y = c(4,15,42,92,115),
+                     c("1947-12-1")),
+  y = c(4,17,42,92,115),
   angle = c(0,90,0,0,0),
   hjust = c(0.5,0.5,0,1,0.5),
   label = c(glue::glue("TUSKGEE AIRMEN<br>GROUP IS CREATED"),
@@ -199,7 +199,7 @@ insights <- tibble(
 title <- tibble(
   x = lubridate::ymd("1943-1-1"),
   y = c(top_grid+20,top_grid+5),
-  size = c(36,12),
+  size = c(36,11),
   label = c(glue::glue("CUMULATIVE AERIAL VICTORIES CREDITED TO<br>PILOTS OF THE TUSKGEE AIRMEN."),
             glue::glue("INSPIRATED BY: W.E.B. DU BOIS | DATA FROM: COMMEMORATIVE AIRFORCE (CAF)
                        BY WAY OF THE VA-TUG | GRAPHIC BY: ÍCARO BERNARDES (@IcaroBSC)")),
@@ -266,5 +266,5 @@ p <- strikes %>%
 
 ## Saves the plot
 ggsave("2022/week05/strikes.png", plot = p, dpi = "retina",
-       width = 25, height = 27)
+       width = 23, height = 25)
 
