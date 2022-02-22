@@ -91,7 +91,7 @@ titles <- tibble(
 highlights <- tibble(
   x = c(-52.05,-47.75,-30.95,-27.8),
   y = rep(c(-45.9,-47),2),
-  fill = c(rep("#91b6d4",2),rep("#C798B3",2))
+  fill = c(rep("#f2738c",2),rep("#C798B3",2))
 )
 
 ## Gets access data from the most unequal state
