@@ -8,6 +8,10 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
 
 ## 2022
+### Week 7 - Racial inequality
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week07/week07.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week07/access.png)
+
 ### Week 6 - Racial inequality
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/week06.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/income.png)
