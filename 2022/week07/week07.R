@@ -29,21 +29,22 @@ ufs <- readRDS("2022/week07/ufs.RDS") %>%
 ## Defines limits so both variables are divided into three
 ## groups of even width and easily understandable boundaries
 min_mobile <- 10*(min(rawdata$mobile) %/% 10)
-max_mobile <- 10*((max(rawdata$mobile) %/% 10)+1)
-if (max_mobile > 100) {max_mobile <- 100}
-bounds_mobile <- seq(min_mobile, max_mobile, length.out = 4)
-bounds_mobile <- santoku::brk_manual(bounds_mobile, c(TRUE,TRUE,TRUE,FALSE))
 min_internet <- 10*(min(rawdata$internet) %/% 10)
+inferior <- min(min_mobile,min_internet)
+
+max_mobile <- 10*((max(rawdata$mobile) %/% 10)+1)
 max_internet <- 10*((max(rawdata$internet) %/% 10)+1)
-if (max_internet > 100) {max_internet <- 100}
-bounds_internet <- seq(min_internet, max_internet, length.out = 4)
-bounds_internet <- santoku::brk_manual(bounds_internet, c(TRUE,TRUE,TRUE,FALSE))
+superior <- max(max_mobile,max_internet)
+
+if (superior > 100) {superior <- 100}
+bounds <- seq(inferior, superior, length.out = 4)
+bounds <- santoku::brk_manual(bounds, c(TRUE,TRUE,TRUE,FALSE))
 
 ## Creates categorical variables which represent these groups
 ## and a numerical one to represent their crossing
 df <- rawdata %>% 
-  dplyr::mutate(mobile_cat = santoku::chop(mobile, bounds_mobile, extend = FALSE),
-                internet_cat = santoku::chop(internet, bounds_internet, extend = FALSE),
+  dplyr::mutate(mobile_cat = santoku::chop(mobile, bounds, extend = FALSE),
+                internet_cat = santoku::chop(internet, bounds, extend = FALSE),
                 cat = glue::glue("{as.numeric(mobile_cat)}{as.numeric(internet_cat)}"),
                 cat = as.numeric(cat))
 
