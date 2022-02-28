@@ -1,3 +1,4 @@
+############################ DuBoisChallenge ###################################
 # 0. Library and fonts management
 library(tidyverse)
 library(ggplot2)
@@ -200,5 +201,4 @@ p <- df %>%
 ## Saves the plot
 ggsave("2022/week07/access.png", plot = p, dpi = "retina",
        width = 22, height = 28)
-
 

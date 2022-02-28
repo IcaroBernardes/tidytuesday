@@ -1,0 +1,347 @@
+---
+output: html_document
+---
+
+```{css, echo=FALSE}
+
+.main-container {
+width: 1300px !important;
+}
+
+body {
+padding-top: 25px;
+}
+
+.main-container {
+max-width: 1300px !important;
+}
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE}
+
+# 0. Library and fonts management
+library(tidyverse)
+library(ggplot2)
+library(ggrepel)
+library(showtext)
+library(glue)
+library(DescTools)
+library(gtExtras)
+library(gt)
+
+## Adding Google Fonts
+sysfonts::font_add_google(name = "Dosis", family = "Dosis")
+
+## Allows the use of the downloaded Google Font
+## To see the results updated, it's needed to call windows() or save the image
+showtext::showtext_opts(dpi = 320)
+showtext::showtext_auto()
+
+# 1. Data download, load and handling
+rawdata <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-22/freedom.csv') %>% 
+  dplyr::select(-Status, -Region_Code, -is_ldc)
+
+## Lists countries that had a colonial relation and their flags
+colonialism <- tibble(
+  
+  country = c("Belgium",
+              "Democratic Republic of the Congo",
+              "Rwanda",
+              "Burundi",
+              
+              "United Kingdom of Great Britain and Northern Ireland",
+              "Cyprus",
+              "Malta",
+              "Ireland",
+              "Somalia",
+              "Egypt",
+              "Sudan",
+              "Kenya",
+              "Uganda",
+              "United Republic of Tanzania",
+              "Malawi",
+              "Zambia",
+              "Zimbabwe",
+              "Botswana",
+              "South Africa",
+              "Nigeria",
+              "Ghana",
+              "Sierra Leone",
+              "Gambia",
+              "United States of America",
+              "Bahamas",
+              "Barbados",
+              "Jamaica",
+              "Belize",
+              "Guyana",
+              "India",
+              "Pakistan",
+              "Bangladesh",
+              "Myanmar",
+              "Nepal",
+              "Bhutan",
+              "Afghanistan",
+              "United Arab Emirates",
+              "Bahrain",
+              "Qatar",
+              "Iraq",
+              "Jordan",
+              "Israel",
+              "Kuwait",
+              "Yemen",
+              "Oman",
+              "Malaysia",
+              "Singapore",
+              "Canada",
+              "Australia",
+              "New Zealand"
+              
+  ),
+  
+  flag = c(197583,197378,197393,197534,
+           
+           197374,197607,197625,197567,197438,
+           197558,197415,197608,197628,197634,
+           197384,197621,197394,197510,197562,
+           197627,197381,197488,197478,197484,
+           197442,197526,197611,197522,197457,
+           197419,197606,197509,197609,197387,
+           197543,197515,197569,197521,197618,
+           197630,197595,197577,197459,197417,
+           197635,197581,197496,197430,197507,
+           197589
+           
+           
+           
+           
+  ),
+  
+  `Past status` = c("Colonizer", rep("Colonized",3),
+                    "Colonizer", rep("Colonized",45)),
+  
+  group = c(rep("Belgium and its victims",4),
+            rep("UK and its victims",46)),
+  
+  start = c(NA,1908,1922,1922,
+            
+            NA,NA,NA,NA,1884,
+            1914,1899,1895,1894,1922,
+            1893,1924,1923,1885,1885,
+            1914,1867,1808,1821,NA,
+            NA,NA,1655,1862,1814,
+            1757,1757,1757,1824,1816,
+            1865,1879,1820,1860,1916,
+            1920,1921,1920,1899,1872,
+            1892,1826,1826,1763,1788,
+            1840
+            
+  ),
+  end = c(NA,1960,1962,1962,
+          
+          NA,NA,NA,NA,1960,
+          1936,1956,1963,1962,1961,
+          1964,1964,1965,1966,1966,
+          1954,1957,1961,1965,NA,
+          NA,NA,1962,1981,1966,
+          1858,1858,1858,1948,1923,
+          1947,1919,1971,1971,1971,
+          1932,1946,1948,1961,1963,
+          1970,1957,1957,1867,1901,
+          1907
+          
+  )
+  
+) %>% 
+  dplyr::mutate(flag = glue::glue("https://cdn-icons-png.flaticon.com/512/197/{flag}.png")) %>% 
+  dplyr::group_by(group) %>%
+  dplyr::mutate(min = min(start, na.rm = TRUE),
+                max = max(end, na.rm = TRUE)) %>% 
+  dplyr::ungroup()
+
+## Joins the data and keeps only the listed
+table <- rawdata %>% 
+  dplyr::right_join(colonialism)
+
+## Categorizes the evaluations time-wise (first, last and in-between)
+table <- table %>% 
+  dplyr::mutate(entry = case_when(year == 1995 ~ "Oldest entry",
+                                  year == 2020 ~ "Newest entry",
+                                  TRUE ~ "entries")) %>% 
+  dplyr::select(-year)
+
+## Gets the most frequent score for each country and adds to the data.
+## In case of ties, gets the lowest value (highest score)
+mode <- table %>% 
+  dplyr::group_by(country) %>% 
+  dplyr::summarise(CL = DescTools::Mode(CL)[1],
+                   PR = DescTools::Mode(PR)[1],
+                   Region_Name = unique(Region_Name),
+                   flag = unique(flag),
+                   `Past status` = unique(`Past status`),
+                   group = unique(group),
+                   start = unique(start),
+                   end = unique(end),
+                   min = unique(min),
+                   max = unique(max),
+                   entry = "Typical entry")
+table <- rbind(table, mode)
+
+## Keeps only the oldest, newest and typical entries
+table <- table %>% 
+  dplyr::filter(entry != "entries")
+
+## Rearranges the data and renames some variables
+table <- table %>% 
+  dplyr::rename("Country" = "country",
+                "Continent" = "Region_Name",
+                "Civil Liberties" = "CL",
+                "Political Rights" = "PR") %>% 
+  tidyr::pivot_wider(names_from = entry,
+                     values_from = c("Civil Liberties","Political Rights"))
+
+## Creates plot function and the objects
+fun_plot <- function(data) {
+  
+  range <- data$max-data$min
+  
+  colonial <- data %>% 
+    ggplot() +
+    geom_rect(aes(xmin = min, xmax = max, ymin = 0, ymax = 100), fill = "gray") +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 0, ymax = 100), fill = "red") +
+    ggrepel::geom_text_repel(aes(x = start, y = 180, label = start), size = 22,
+                             hjust = 0, direction = "x", seed = 42) +
+    ggrepel::geom_text_repel(aes(x = end, y = 180, label = end), size = 22,
+                             hjust = 1, direction = "x", seed = 42) +
+    coord_fixed(ratio = range/3000, xlim = c(data$min,data$max), ylim = c(0, 250), expand = FALSE) +
+    theme_void()
+  
+  return(colonial)
+  
+}
+
+data_plot <- table %>% 
+  dplyr::group_by(Country) %>% 
+  tidyr::nest() %>% 
+  dplyr::mutate(
+    gg = purrr::map(data, fun_plot)
+  ) %>% 
+  dplyr::select(Country, gg)
+
+## Adds plots objects to the data
+table <- table %>% 
+  dplyr::left_join(data_plot)
+
+## Creates a variable to order the rows
+table <- table %>% 
+  dplyr::group_by(group) %>% 
+  dplyr::arrange(group, desc(`Past status`),`Civil Liberties_Typical entry`,
+                 `Political Rights_Typical entry`, Continent, Country) %>%
+  dplyr::mutate(order = 1:n()) %>% 
+  dplyr::ungroup()
+
+## Combines country name and flag into a single column
+table <- table %>% 
+  dplyr::mutate(Country = glue::glue("<span><img src='{flag}' style='height:12px; margin-right:7px;'></span><span>{Country}</span>")) %>%
+  dplyr::mutate(Country = purrr::map(Country, gt::html)) %>%
+  dplyr::select(-flag)
+
+## Lists colors for the continents
+regions <- tibble(
+  Continent = c("Asia", "Europe", "Africa", "Americas", "Oceania"),
+  color_continent = c("#F7AC30", "#0381C7", "#030303", "#E73952", "#01964A")
+)
+
+## Applies the continents colors to their names
+table <- table %>% 
+  dplyr::left_join(regions) %>% 
+  dplyr::mutate(Continent = glue::glue("<div style='color:{color_continent}; font-weight:bold; width:100px;'>{Continent}</div>")) %>% 
+  dplyr::mutate(Continent = purrr::map(Continent, gt::html)) %>%
+  dplyr::select(-color_continent)
+
+## Applies color to the "Past status" of the countries
+table <- table %>% 
+  dplyr::mutate(`Past status` =
+                  case_when(`Past status` == "Colonizer" ~ glue::glue("<div style='color:#0381C7; font-weight:bold; width:150px;'>{`Past status`}</div>"),
+                            TRUE ~ glue::glue("<div style='color:#030303; font-weight:bold; width:150px;'>{`Past status`}</div>"))
+  ) %>% 
+  dplyr::mutate(`Past status` = purrr::map(`Past status`, gt::html))
+
+## Groups the data and arranges it. Also creates an
+## empty variable as a placeholder for the plots
+table <- table %>% 
+  dplyr::group_by(group) %>% 
+  dplyr::arrange(group, order) %>% 
+  dplyr::mutate(`Colonial Rule` = NA)
+
+## Creates the html structure of the title
+title <- glue::glue(
+  "<p style='font-size:100px;font-weight:bold;margin-top:10px;'>ARE WE
+  <span style='color:white;background:black;padding-left:10px;padding-right:10px;'>FREE</span>
+  YET?</p>
+  <p>Colonial powers made many victims in the past. These crimes have lingering consequences such as underdevelopment, inequality and national divides.<br>
+  This table shows groups of colonial empires. Countries are arranged by their most frequent score in Civil Liberties and Political Rights
+  <br>from 1995 till 2020. Scores go from 1 (most free) to 7 (least free). Furthermore the period of colonial rule is shown in bars.
+  <br>Time under colonial rule is in red, while the total span of time as ruler is gray. The scales of the bars are different for each group</p>
+  <p style='font-size:16px;'>Freedom scores data: Freedom House and the United Nations by way of Arthur Cheib | Colonial rule data: Wikipedia | Table by: Ícaro Bernardes - @IcaroBSC
+  <a href='https://twitter.com/icarobsc' target='_blank'><img src='icons/twitter.png' style='height:15px;margin-left:5px;margin-bottom:3px;'></a>
+  <a href='https://linkedin.com/in/icarobsc' target='_blank'><img src='icons/linkedin.png' style='height:15px;margin-left:5px;margin-bottom:3px;'></a>
+  <a href='https://github.com/IcaroBernardes' target='_blank'><img src='icons/github.png' style='height:15px;margin-left:5px;margin-bottom:3px;'></a></p>"
+)
+
+# 2. Generates the table
+table %>% 
+  dplyr::select(`Past status`, Country, `Colonial Rule`,
+                Continent, matches("^Civil Liberties|Political Rights")) %>% 
+  gt::gt() %>% 
+  gt::tab_header(gt::html(title)) %>% 
+  gt::tab_spanner_delim(delim = "_") %>% 
+  gt::text_transform(
+    locations = cells_body(columns = "Colonial Rule"),
+    fn = function(x) {
+      purrr::map(
+        table$gg, gt::ggplot_image,
+        height = px(25), aspect_ratio = 9
+      ) 
+    }
+  ) %>% 
+  gtExtras::gt_color_rows(columns = matches("^Civil Liberties|Political Rights"),
+                          palette = c("blue","white","red"),
+                          use_paletteer = FALSE,
+                          domain = c(1,7)) %>% 
+  gt::cols_width("Colonial Rule" ~ px(250),
+                 "Country" ~ px(410),
+                 matches("^Civil Liberties|Political Rights") ~ px(50)) %>% 
+  gt::tab_style(
+    style = list(
+      cell_text(align = "center",
+                size = px(10))
+    ),
+    locations = list(
+      cells_column_labels(columns = matches("^Civil Liberties|Political Rights"))
+    )
+  ) %>% 
+  gt::tab_style(
+    style = list(
+      cell_text(align = "center")
+    ),
+    locations = list(
+      cells_body(columns = matches("^Civil Liberties|Political Rights"))
+    )
+  ) %>% 
+  gt::tab_style(
+    style = list(
+      cell_text(align = "left")
+    ),
+    locations = cells_body(
+      columns = "Country"
+    )
+  ) %>% 
+  gt::tab_style(
+    style = list(
+      cell_text(font = gt::google_font("Dosis"))
+    ),
+    locations = cells_title(groups = "title")
+  )
+
+```
