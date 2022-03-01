@@ -183,7 +183,7 @@ titles <- tibble(
                        <br>WERE WORKING IN THE WEEK THAT PRECEDED THE INTERVIEW."),
             glue::glue("IN {year_blk_inf} BLACK PEOPLE WITH INFORMAL JOBS HAD THEIR BEST YEAR IN THE SERIES.
                        <br>THEY EARNED IN AVERAGE {max_blk_inf}.00 BRL ({round(max_blk_inf*rate_blk_inf, 2)} USD) PER MONTH."),
-            glue::glue("INSPIRATED BY: W.E.B. DU BOIS | DATA FROM: IBGE | GRAPHIC BY: ÍCARO BERNARDES (@IcaroBSC)")),
+            glue::glue("INSPIRED BY: W.E.B. DU BOIS | DATA FROM: IBGE | GRAPHIC BY: ÍCARO BERNARDES (@IcaroBSC)")),
 )
 
 ## Defines coordinates for the highlights

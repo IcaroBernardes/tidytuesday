@@ -95,7 +95,19 @@ colonialism <- tibble(
               "Singapore",
               "Canada",
               "Australia",
-              "New Zealand"
+              "New Zealand",
+              
+              "Netherlands",
+              "Suriname",
+              "South Africa",
+              "Indonesia",
+              
+              "France",
+              "Canada",
+              "Vietnam",
+              "Laos",
+              "Cambodia",
+              
               
   ),
   
@@ -110,7 +122,11 @@ colonialism <- tibble(
            197543,197515,197569,197521,197618,
            197630,197595,197577,197459,197417,
            197635,197581,197496,197430,197507,
-           197589
+           197589,
+           
+           197441,197439,197562,197559,
+           
+           197560,197430,197473,197568,197505,
            
            
            
@@ -118,10 +134,17 @@ colonialism <- tibble(
   ),
   
   `Past status` = c("Colonizer", rep("Colonized",3),
-                    "Colonizer", rep("Colonized",45)),
+                    "Colonizer", rep("Colonized",45),
+                    "Colonizer", rep("Colonized",3),
+                    "Colonizer", rep("Colonized",3),
+                    
+                    ),
   
   group = c(rep("Belgium and its victims",4),
-            rep("UK and its victims",46)),
+            rep("UK and its victims",46),
+            rep("Netherlands and its victims",4),
+            rep("France and its victims",4),
+            ),
   
   start = c(NA,1908,1922,1922,
             
@@ -134,7 +157,11 @@ colonialism <- tibble(
             1865,1879,1820,1860,1916,
             1920,1921,1920,1899,1872,
             1892,1826,1826,1763,1788,
-            1840
+            1840,
+            
+            NA,1667,1652,1816,
+            
+            NA,1534,1887,1899,1887,
             
   ),
   end = c(NA,1960,1962,1962,
@@ -148,7 +175,11 @@ colonialism <- tibble(
           1947,1919,1971,1971,1971,
           1932,1946,1948,1961,1963,
           1970,1957,1957,1867,1901,
-          1907
+          1907,
+          
+          NA,1954,1806,1949,
+          
+          NA,1763,1954,1953,1953,
           
   )
   
@@ -235,8 +266,9 @@ table <- table %>%
 ## Creates a variable to order the rows
 table <- table %>% 
   dplyr::group_by(group) %>% 
-  dplyr::arrange(group, desc(`Past status`),`Civil Liberties_Typical entry`,
-                 `Political Rights_Typical entry`, Continent, Country) %>%
+  dplyr::mutate(score_sum = `Civil Liberties_Typical entry` + `Political Rights_Typical entry`) %>% 
+  dplyr::arrange(group, desc(`Past status`), score_sum, Continent, Country) %>%
+  dplyr::select(-score_sum) %>% 
   dplyr::mutate(order = 1:n()) %>% 
   dplyr::ungroup()
 
@@ -280,7 +312,7 @@ title <- glue::glue(
   <span style='color:white;background:black;padding-left:10px;padding-right:10px;'>FREE</span>
   YET?</p>
   <p>Colonial powers made many victims in the past. These crimes have lingering consequences such as underdevelopment, inequality and national divides.<br>
-  This table shows groups of colonial empires. Countries are arranged by their most frequent score in Civil Liberties and Political Rights
+  This table shows groups of colonial empires. Countries are arranged by the sum of their most frequent score in Civil Liberties and Political Rights
   <br>from 1995 till 2020. Scores go from 1 (most free) to 7 (least free). Furthermore the period of colonial rule is shown in bars.
   <br>Time under colonial rule is in red, while the total span of time as ruler is gray. The scales of the bars are different for each group</p>
   <p style='font-size:16px;'>Freedom scores data: Freedom House and the United Nations by way of Arthur Cheib | Colonial rule data: Wikipedia | Table by: Ícaro Bernardes - @IcaroBSC
