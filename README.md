@@ -8,15 +8,19 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
 
 ## 2022
-### Week 7 - Racial inequality
+### Week 8 - Racial inequality (#DuBoisChallenge2022)
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/week08.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/incomes.png)
+
+### Week 7 - Racial inequality (#DuBoisChallenge2022)
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week07/week07.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week07/access.png)
 
-### Week 6 - Racial inequality
+### Week 6 - Racial inequality (#DuBoisChallenge2022)
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/week06.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/income.png)
 
-### Week 5 - Tuskegee Airmen
+### Week 5 - Tuskegee Airmen (#DuBoisChallenge2022)
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/week05.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/strikes.png)
 
