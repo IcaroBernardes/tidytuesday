@@ -8,6 +8,10 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
 
 ## 2022
+### Week 8 - Alternative Fuel Stations
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/week08.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/fuels.png)
+
 ### Week 8 - Racial inequality (#DuBoisChallenge2022)
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/week08.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/incomes.png)
