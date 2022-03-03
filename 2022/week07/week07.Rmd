@@ -96,6 +96,7 @@ colonialism <- tibble(
               "Canada",
               "Australia",
               "New Zealand",
+              "Vanuatu",
               
               "Netherlands",
               "Suriname",
@@ -104,10 +105,11 @@ colonialism <- tibble(
               
               "France",
               "Canada",
-              "Vietnam",
-              "Laos",
+              "Viet Nam",
+              "Lao People's Democratic Republic",
               "Cambodia",
-              
+              "Vanuatu",
+              "Algeria",
               
   ),
   
@@ -122,11 +124,12 @@ colonialism <- tibble(
            197543,197515,197569,197521,197618,
            197630,197595,197577,197459,197417,
            197635,197581,197496,197430,197507,
-           197589,
+           197589,197489,
            
            197441,197439,197562,197559,
            
            197560,197430,197473,197568,197505,
+           197489,197511,
            
            
            
@@ -134,16 +137,16 @@ colonialism <- tibble(
   ),
   
   `Past status` = c("Colonizer", rep("Colonized",3),
-                    "Colonizer", rep("Colonized",45),
+                    "Colonizer", rep("Colonized",46),
                     "Colonizer", rep("Colonized",3),
-                    "Colonizer", rep("Colonized",3),
+                    "Colonizer", rep("Colonized",5)
                     
                     ),
   
   group = c(rep("Belgium and its victims",4),
-            rep("UK and its victims",46),
+            rep("UK and its victims",47),
             rep("Netherlands and its victims",4),
-            rep("France and its victims",4),
+            rep("France and its victims",6)
             ),
   
   start = c(NA,1908,1922,1922,
@@ -157,11 +160,12 @@ colonialism <- tibble(
             1865,1879,1820,1860,1916,
             1920,1921,1920,1899,1872,
             1892,1826,1826,1763,1788,
-            1840,
+            1840,1906,
             
             NA,1667,1652,1816,
             
             NA,1534,1887,1899,1887,
+            1906,1830,
             
   ),
   end = c(NA,1960,1962,1962,
@@ -175,14 +179,14 @@ colonialism <- tibble(
           1947,1919,1971,1971,1971,
           1932,1946,1948,1961,1963,
           1970,1957,1957,1867,1901,
-          1907,
+          1907,1980,
           
           NA,1954,1806,1949,
           
           NA,1763,1954,1953,1953,
+          1980,1962,
           
   )
-  
 ) %>% 
   dplyr::mutate(flag = glue::glue("https://cdn-icons-png.flaticon.com/512/197/{flag}.png")) %>% 
   dplyr::group_by(group) %>%
@@ -252,12 +256,13 @@ fun_plot <- function(data) {
 }
 
 data_plot <- table %>% 
-  dplyr::group_by(Country) %>% 
+  dplyr::group_by(Country, group) %>% 
   tidyr::nest() %>% 
   dplyr::mutate(
     gg = purrr::map(data, fun_plot)
   ) %>% 
-  dplyr::select(Country, gg)
+  dplyr::ungroup() %>% 
+  dplyr::select(Country, group, gg)
 
 ## Adds plots objects to the data
 table <- table %>% 
