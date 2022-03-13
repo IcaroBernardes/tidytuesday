@@ -46,7 +46,6 @@ rawdata <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 ## Lists countries that had a colonial relation and their flags
 library(readxl)
 colonialism <- readxl::read_excel("colonialism.xlsx") %>% 
-  dplyr::rename("Past status" = "past") %>% 
   dplyr::mutate(flag = glue::glue("https://cdn-icons-png.flaticon.com/512/197/{flag}.png")) %>% 
   dplyr::group_by(group) %>%
   dplyr::mutate(min = min(start, na.rm = TRUE),
@@ -57,11 +56,15 @@ colonialism <- readxl::read_excel("colonialism.xlsx") %>%
 table <- rawdata %>% 
   dplyr::right_join(colonialism)
 
-## Categorizes the evaluations time-wise (first, last and in-between)
+## Categorizes non-NA evaluations time-wise (first, last and in-between)
 table <- table %>% 
-  dplyr::mutate(entry = case_when(year == 1995 ~ "Oldest entry",
-                                  year == 2020 ~ "Newest entry",
+  dplyr::filter(!is.na(CL) & !is.na(PR)) %>% 
+  dplyr::group_by(group, country) %>% 
+  dplyr::arrange(group, country, year) %>% 
+  dplyr::mutate(entry = case_when(row_number() == 1L ~ "Oldest entry",
+                                  row_number() == n() ~ "Newest entry",
                                   TRUE ~ "entries")) %>% 
+  dplyr::ungroup() %>% 
   dplyr::select(-year)
 
 ## Gets the most frequent score for each country and adds to the data.
@@ -91,8 +94,7 @@ table <- table %>%
                 "Continent" = "Region_Name",
                 "Civil Liberties" = "CL",
                 "Political Rights" = "PR") %>% 
-  tidyr::pivot_wider(id_cols = c("Country", "group"),
-                     names_from = entry,
+  tidyr::pivot_wider(names_from = entry,
                      values_from = c("Civil Liberties","Political Rights"))
 
 ## Creates plot function and the objects
@@ -128,21 +130,17 @@ data_plot <- table %>%
 table <- table %>% 
   dplyr::left_join(data_plot)
 
-```
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE}
-
 ## Creates a variable to order the rows
-table <- table %>% 
-  dplyr::group_by(group) %>% 
-  dplyr::mutate(score_sum = `Civil Liberties_Typical entry` + `Political Rights_Typical entry`) %>% 
-  dplyr::arrange(group,  score_sum, Continent, Country) %>%
-  dplyr::select(-score_sum) %>% 
-  dplyr::mutate(order = 1:n()) %>% 
+table <- table %>%
+  dplyr::group_by(group) %>%
+  dplyr::mutate(score_sum = `Civil Liberties_Typical entry` + `Political Rights_Typical entry`) %>%
+  dplyr::arrange(group, desc(`Past status`), score_sum, Continent, Country) %>%
+  dplyr::select(-score_sum) %>%
+  dplyr::mutate(order = 1:n()) %>%
   dplyr::ungroup()
 
 ## Combines country name and flag into a single column
-table <- table %>% 
+table <- table %>%
   dplyr::mutate(Country = glue::glue("<span><img src='{flag}' style='height:12px; margin-right:7px;'></span><span>{Country}</span>")) %>%
   dplyr::mutate(Country = purrr::map(Country, gt::html)) %>%
   dplyr::select(-flag)
@@ -154,36 +152,43 @@ regions <- tibble(
 )
 
 ## Applies the continents colors to their names
-table <- table %>% 
-  dplyr::left_join(regions) %>% 
-  dplyr::mutate(Continent = glue::glue("<div style='color:{color_continent}; font-weight:bold; width:100px;'>{Continent}</div>")) %>% 
+table <- table %>%
+  dplyr::left_join(regions) %>%
+  dplyr::mutate(Continent = glue::glue("<div style='color:{color_continent}; font-weight:bold; width:100px;'>{Continent}</div>")) %>%
   dplyr::mutate(Continent = purrr::map(Continent, gt::html)) %>%
   dplyr::select(-color_continent)
 
 ## Applies color to the "Past status" of the countries
-table <- table %>% 
+table <- table %>%
   dplyr::mutate(`Past status` =
                   case_when(`Past status` == "Colonizer" ~ glue::glue("<div style='color:#0381C7; font-weight:bold; width:150px;'>{`Past status`}</div>"),
                             TRUE ~ glue::glue("<div style='color:#030303; font-weight:bold; width:150px;'>{`Past status`}</div>"))
-  ) %>% 
+  ) %>%
   dplyr::mutate(`Past status` = purrr::map(`Past status`, gt::html))
 
 ## Groups the data and arranges it. Also creates an
 ## empty variable as a placeholder for the plots
-table <- table %>% 
-  dplyr::group_by(group) %>% 
-  dplyr::arrange(group, order) %>% 
+table <- table %>%
+  dplyr::group_by(group) %>%
+  dplyr::arrange(group, order) %>%
   dplyr::mutate(`Colonial Rule` = NA)
 
 ## Creates the html structure of the title
+# The data on colonialism is incomplete and was manually searched and collected from Wikipedia
 title <- glue::glue(
   "<p style='font-size:100px;font-weight:bold;margin-top:10px;'>ARE WE
   <span style='color:white;background:black;padding-left:10px;padding-right:10px;'>FREE</span>
   YET?</p>
-  <p>Colonial powers made many victims in the past. These crimes have lingering consequences such as underdevelopment, inequality and national divides.<br>
-  This table shows groups of colonial empires. Countries are arranged by the sum of their most frequent score in Civil Liberties and Political Rights
+  
+  <p>Colonial powers made many victims in the past. These crimes have lingering consequences such as underdevelopment, inequality and national divides.
+  <br>This table shows groups of colonial empires. Countries are arranged by the sum of their most frequent score in Civil Liberties and Political Rights
   <br>from 1995 till 2020. Scores go from 1 (most free) to 7 (least free). Furthermore the period of colonial rule is shown in bars.
-  <br>Time under colonial rule is in red, while the total span of time as ruler is gray. The scales of the bars are different for each group</p>
+  <br>Time under colonial rule is in red, while the total span of time as ruler is gray. The scales of the bars are different for each group.
+  <br>The data on colonialism is incomplete and was manually searched and collected from Wikipedia.</p>
+  
+  <p style='font-weight:bold;'>The purpose of this table is not to place all the blame in Colonialism for the current tragedies in many countries,
+  <br>rather it is to remeber us that many past colonies still are under shackles, while many past colonizers enjoy Freedom.</p>
+  
   <p style='font-size:16px;'>Freedom scores data: Freedom House and the United Nations by way of Arthur Cheib | Colonial rule data: Wikipedia | Table by: Ícaro Bernardes - @IcaroBSC
   <a href='https://twitter.com/icarobsc' target='_blank'><img src='icons/twitter.png' style='height:15px;margin-left:5px;margin-bottom:3px;'></a>
   <a href='https://linkedin.com/in/icarobsc' target='_blank'><img src='icons/linkedin.png' style='height:15px;margin-left:5px;margin-bottom:3px;'></a>
@@ -191,28 +196,28 @@ title <- glue::glue(
 )
 
 # 2. Generates the table
-table %>% 
+table %>%
   dplyr::select(`Past status`, Country, `Colonial Rule`,
-                Continent, matches("^Civil Liberties|Political Rights")) %>% 
-  gt::gt() %>% 
-  gt::tab_header(gt::html(title)) %>% 
-  gt::tab_spanner_delim(delim = "_") %>% 
+                Continent, matches("^Civil Liberties|Political Rights")) %>%
+  gt::gt() %>%
+  gt::tab_header(gt::html(title)) %>%
+  gt::tab_spanner_delim(delim = "_") %>%
   gt::text_transform(
     locations = cells_body(columns = "Colonial Rule"),
     fn = function(x) {
       purrr::map(
         table$gg, gt::ggplot_image,
         height = px(25), aspect_ratio = 9
-      ) 
+      )
     }
-  ) %>% 
+  ) %>%
   gtExtras::gt_color_rows(columns = matches("^Civil Liberties|Political Rights"),
                           palette = c("blue","white","red"),
                           use_paletteer = FALSE,
-                          domain = c(1,7)) %>% 
+                          domain = c(1,7)) %>%
   gt::cols_width("Colonial Rule" ~ px(250),
                  "Country" ~ px(410),
-                 matches("^Civil Liberties|Political Rights") ~ px(50)) %>% 
+                 matches("^Civil Liberties|Political Rights") ~ px(50)) %>%
   gt::tab_style(
     style = list(
       cell_text(align = "center",
@@ -221,7 +226,7 @@ table %>%
     locations = list(
       cells_column_labels(columns = matches("^Civil Liberties|Political Rights"))
     )
-  ) %>% 
+  ) %>%
   gt::tab_style(
     style = list(
       cell_text(align = "center")
@@ -229,7 +234,7 @@ table %>%
     locations = list(
       cells_body(columns = matches("^Civil Liberties|Political Rights"))
     )
-  ) %>% 
+  ) %>%
   gt::tab_style(
     style = list(
       cell_text(align = "left")
@@ -237,7 +242,7 @@ table %>%
     locations = cells_body(
       columns = "Country"
     )
-  ) %>% 
+  ) %>%
   gt::tab_style(
     style = list(
       cell_text(font = gt::google_font("Dosis"))
