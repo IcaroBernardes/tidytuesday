@@ -12,8 +12,10 @@ library(patchwork)
 library(countrycode)
 library(rnaturalearth)
 library(sf)
+library(rmapshaper)
 library(colorspace)
 library(ggimage)
+library(ggforce)
 library(scales)
 
 ## Adding Google Fonts
@@ -91,6 +93,13 @@ colorgroups <- tibble(
 
 ## Gets the shapes of the countries
 shapes <- ne_countries(scale = 50, "countries", returnclass = "sf")
+
+## Simplifies the shapes (greatly reduces object memory size)
+geom <- sf::st_geometry(shapes) %>% 
+  rmapshaper::ms_simplify(keep_shapes = TRUE)
+sf::st_geometry(shapes) <- geom
+
+## Gets the shapes of the countries of interest
 shapes_cnt <- shapes %>% 
   dplyr::full_join(sets, by = "name") %>% 
   dplyr::filter(name %in% sets$name) %>% 
@@ -153,26 +162,28 @@ cnt_list <- sets %>%
 
 ## Defines the coordinates for the titles
 titles <- tibble(
-  x = c(rep(0.5,3),rep(0.95,2),rep(0.35,2),rep(0.4,2)),
-  y = c(0.98,0.93,0.88,0.82,0.8,0.47,0.45,0.21,0.17),
+  x = c(rep(0.5,3),rep(0.05,2),rep(0.26,2),rep(0.4,2)),
+  y = c(0.98,0.93,0.88,0.8,0.78,0.53,0.51,0.21,0.17),
   size = c(38,10,13,rep(c(15,8),3)),
-  hjust = c(rep(0.5,3),rep(1,2),rep(0,2),rep(1,2)),
+  hjust = c(rep(0.5,3),rep(0,2),rep(0,2),rep(1,2)),
   label = c('**Hallo! Hej! Bok! Moi!**',
             'ERASMUS is an European Union programme for education, training, youth and sport.<br>
             Students that take part on it may move to institutions (mostly) across Europe.<br>
             Two of the many mobility activities are **national** and **transnational** in nature.',
             'Data from: Data.Europa | Graphic by: Ícaro Bernardes (@IcaroBSC)',
+            
             '**COUNTRIES REGIONS**',
-            'All countries to which the sending and receiving institutions belong<br>
-            are listed bellow according to their region.',
+            'All countries to which the sending and receiving institutions<br>
+            belong are listed bellow according to their region.',
+            
             '**NATIONAL MEETINGS**',
-            'Most students that participate in national meetings come from institutions<br>
-            from the hosting country. The bar chart on the left shows the number<br>
-            of participants by receiving country. These countries amount<br>
-            to 75% of all participants in national meetings.<br>
+            'Most participants in national meetings come from institutions in the hosting country.<br>
+            The bar chart on the left shows the number of participants by receiving country.<br>
+            These countries amount to 75% of all participants in national meetings.<br>
             The top 2, Germany and Poland, receive a staggering number of students.<br>
             It is also worth of note the number of visitors that come to<br>
             the relatively low populated Latvia and Lithuania.',
+            
             '**TRANSNATIONAL<br>MEETINGS**',
             'Most students that participate<br>
             in transnational meetings stay<br>
@@ -249,17 +260,22 @@ bars <- nation %>%
   theme_void()
 
 ## Creates the map
+worldcolor <- "#cbd6d6"
 map <- shapes %>% 
   ggplot() +
   
   ### Places countries in general
-  geom_sf(fill = "#d7dbdb") +
+  geom_sf(fill = worldcolor, color = worldcolor) +
   
   ### Places the countries of interest
-  geom_sf(aes(fill = I(color)), data = shapes_cnt) +
+  geom_sf(aes(fill = I(color)), color = worldcolor, data = shapes_cnt) +
   
   ### Defines limits for the plot and applies the Mercator projection (default)
-  coord_sf(xlim = c(-25,60), ylim = c(5,70)) +
+  coord_sf(xlim = c(-45,85), ylim = c(2,78)) +
+  
+  ggforce::geom_ellipse(aes(x0 = 20, y0 = 40, a = 87, b = 55, angle = 0),
+                        size = 70, fill = NA,
+                        color = colorspace::lighten(waterclr, 0.7)) +
   
   ### Eliminates unnecessary details and customizes the plot
   theme_void() +
@@ -267,6 +283,7 @@ map <- shapes %>%
     panel.background = element_rect(fill = waterclr, color = NA)
   )
 
+## Creates the main plot
 p <- ggplot(NULL) + 
   
   ### Places the titles
@@ -276,41 +293,37 @@ p <- ggplot(NULL) +
                         family = sans, data = titles) +
   
   ### Places lines and stars to separate sections
-  annotate("segment", x = 0.05, xend = 0.95, y = 0.84, yend = 0.84,
+  annotate("segment", x = 0.05, xend = 0.95, y = 0.83, yend = 0.83,
            color = "#E4BD00", size = 8, lineend = "round") +
-  annotate("point", x = 0.5, y = 0.84, size = 50,
-           color = colorspace::lighten(waterclr, 0.85)) +
-  ggimage::geom_image(aes(x = 0.5, y = 0.84,
+  annotate("point", x = 0.5, y = 0.83, size = 50,
+           color = colorspace::lighten(waterclr, 0.7)) +
+  ggimage::geom_image(aes(x = 0.5, y = 0.83,
                           image = "https://cdn-icons-png.flaticon.com/512/197/197615.png"),
-                      size = 0.05, by = "width", asp = 0.5) +
-  
-  ### Places geometric forms to highlight the map section
-  annotate("point", x = 0.1, y = 0.63, size = 390,
-           color = colorspace::darken(waterclr, 0.3)) +
-  annotate("rect", xmin = 0, xmax = 1, ymin = 0.51-0.015, ymax = 0.75+0.015,
-           fill = colorspace::darken(waterclr, 0.3), color = NA) +
-  annotate("point", x = 0.1, y = 0.63, size = 350, color = waterclr) +
-  annotate("rect", xmin = 0, xmax = 1, ymin = 0.51, ymax = 0.75,
-           fill = waterclr, color = NA) +
+                      size = 0.05, by = "width", asp = 0.55) +
   
   ### Places the countries groups list
-  ggtext::geom_textbox(aes(x = 0.475, y = 0.63, label = label), hjust = 0,
-                       color = "white", box.colour = NA, fill = NA, size = 8,
-                       width = unit(9, "inch"), family = serif, data = cnt_list) +
+  ggtext::geom_textbox(aes(x = 0.05, y = 0.67, label = label), lineheight = 1.2,
+                       size = 6, hjust = 0, box.colour = NA, fill = NA, 
+                       width = unit(8, "inch"), family = sans, data = cnt_list) +
   
+  ### Defines unitary plots limits
   coord_cartesian(xlim = c(0,1), ylim = c(0,1), expand = FALSE) +
+  
+  ### Eliminates and customizes elements on the plot
   theme_void() +
   theme(
-    panel.background = element_rect(fill = colorspace::lighten(waterclr, 0.85), color = NA)
+    panel.background = element_rect(fill = colorspace::lighten(waterclr, 0.7), color = NA)
   ) +
-  inset_element(map, left = 0.015, right = 0.45,
-                bottom = 0.51, top = 0.755) +
-  inset_element(bars, left = 0.03, right = 0.47,
-                bottom = 0.26, top = 0.52) +
-  inset_element(circle, left = 0.45, right = 0.98,
-                bottom = 0.02, top = 0.27)
+  
+  ### Places the map, bars and chord diagram
+  inset_element(map, left = 0.52, right = 0.95,
+                bottom = 0.57, top = 0.77) +
+  inset_element(bars, left = 0.05, right = 0.55,
+                bottom = 0.3, top = 0.56) +
+  inset_element(circle, left = 0.45, right = 0.95,
+                bottom = 0.02, top = 0.3)
 
 ## Saves the plot
 ggsave("2022/week09/erasmus.png", plot = p, dpi = "retina",
-       width = 18, height = 35)
+       width = 18, height = 33)
 
