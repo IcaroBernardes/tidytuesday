@@ -8,6 +8,10 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
 
 ## 2022
+### Week 11 - R vignettes
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week11/week11.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week11/vignettes.png)
+
 ### Week 10 - Racial inequality (#DuBoisChallenge2022)
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week10/dubouis06.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week10/illiteracy.png)
