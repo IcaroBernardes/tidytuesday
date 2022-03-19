@@ -20,10 +20,10 @@ showtext::showtext_auto()
 # 1. Data download, load and handling
 ## Data on inequality comes from IBGE
 ## https://www.ibge.gov.br/estatisticas/sociais/populacao/25844-desigualdades-sociais-por-cor-ou-raca.html?=&t=resultados
-rawdata <- read.csv2("2022/week07/data.csv")
+rawdata <- read.csv2("extras/dubois22/week03/data.csv")
 
 ## Gets the shapes of the states of Brazil and adjusts their names
-ufs <- readRDS("2022/week07/ufs.RDS") %>% 
+ufs <- readRDS("extras/dubois22/week03/ufs.RDS") %>% 
   dplyr::mutate(name_state = stringr::str_to_title(name_state),
                 name_state = stringr::str_replace(name_state,"Amazônas","Amazonas"))
 

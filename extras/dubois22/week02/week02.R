@@ -19,7 +19,7 @@ showtext::showtext_auto()
 # 1. Data download, load and handling
 ## Data on inequality comes from IBGE
 ## https://www.ibge.gov.br/estatisticas/sociais/populacao/25844-desigualdades-sociais-por-cor-ou-raca.html?=&t=resultados
-rawdata <- read.csv2("2022/week06/data.csv")
+rawdata <- read.csv2("extras/dubois22/week02/data.csv")
 
 ## Keeps only income for black people and orders the data by it
 df <- rawdata %>% 

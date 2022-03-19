@@ -28,7 +28,7 @@ legend_pos <- sort(seq(length(y_pos)-8,10,-8))
 # 1. Data download, load and handling
 ## Data on inequality comes from IBGE
 ## https://www.ibge.gov.br/estatisticas/sociais/populacao/25844-desigualdades-sociais-por-cor-ou-raca.html?=&t=resultados
-rawdata <- read.csv2("2022/week08/data.csv") %>% 
+rawdata <- read.csv2("extras/dubois22/week04/data.csv") %>% 
   dplyr::arrange(year)
 
 ## Filters only data of the income of black people in informal jobs
