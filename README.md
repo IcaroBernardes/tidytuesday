@@ -7,40 +7,41 @@ This is my space to experiment with Data Viz and Data Handling! Feel free to cop
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
 
+### #DuBoisChallenge2022
+### Week 06 - Racial inequality (Illiteracy)
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week06/week06.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week06/illiteracy.png)
+
+### Week 05 - Racial inequality (Managerial job positions)
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week05/week05.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week05/managers.png)
+
+### Week 04 - Racial inequality (Real income of people in informal jobs)
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week04/week04.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week04/incomes.png)
+
+### Week 03 - Racial inequality (Mobile phones and internet access)
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/extras/dubois22/2022/week03/week03.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week03/access.png)
+
+#### Week 02 - Racial inequality (Real income of households)
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week02/week02.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week02/income.png)
+
 ## 2022
 ### Week 11 - R vignettes
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week11/week11.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week11/vignettes.png)
 
-### Week 10 - Racial inequality (#DuBoisChallenge2022)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week10/dubouis06.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week10/illiteracy.png)
-
 ### Week 10 - Erasmus student mobility
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week10/week10.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week10/erasmus.png)
 
-### Week 9 - Racial inequality (#DuBoisChallenge2022)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week09/dubouis05.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week09/managers.png)
-
-### Week 8 - Alternative Fuel Stations
+### Week 08 - Alternative Fuel Stations
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/week08.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/fuels.png)
 
-### Week 8 - Racial inequality (#DuBoisChallenge2022)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/week08.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/incomes.png)
-
-### Week 7 - Racial inequality (#DuBoisChallenge2022)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week07/week07.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week07/access.png)
-
-### Week 6 - Racial inequality (#DuBoisChallenge2022)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/week06.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/income.png)
-
-### Week 5 - Tuskegee Airmen (#DuBoisChallenge2022)
+### Week 05 - Tuskegee Airmen (#DuBoisChallenge2022)
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/week05.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/strikes.png)
 
