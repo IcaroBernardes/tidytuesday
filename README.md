@@ -8,6 +8,10 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
 
 ### #DuBoisChallenge2022
+### Week 07 - Racial inequality (Political candidatures financing)
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week07/week07.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week07/congress.png)
+
 ### Week 06 - Racial inequality (Illiteracy)
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week06/week06.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week06/illiteracy.png)
