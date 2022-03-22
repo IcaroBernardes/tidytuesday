@@ -29,6 +29,10 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/we
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week02/income.png)
 
 ## 2022
+### Week 12 - Baby names
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week12/week12.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week12/names.png)
+
 ### Week 11 - R vignettes
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week11/week11.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week11/vignettes.png)
