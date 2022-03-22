@@ -27,7 +27,7 @@ bgcolor <- "#d2b48c"
 # 1. Data download, load and handling
 ## Data on inequality comes from IBGE
 ## https://www.ibge.gov.br/estatisticas/sociais/populacao/25844-desigualdades-sociais-por-cor-ou-raca.html?=&t=resultados
-# rawdata <- read.csv2("extras/dubois22/week06/data.csv")
+rawdata <- read.csv2("extras/dubois22/week06/data.csv")
 
 ## Keeps only data of illiteracy for black people
 df <- rawdata %>% 
