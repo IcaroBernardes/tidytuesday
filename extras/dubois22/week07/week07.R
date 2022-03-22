@@ -4,6 +4,7 @@ library(ggplot2)
 library(showtext)
 library(glue)
 library(seriation)
+library(ggtext)
 
 ## Adding Google Fonts
 sysfonts::font_add_google(name = "Teko", family = "teko") ### Sans Serif
@@ -56,6 +57,7 @@ df <- df %>%
 
 ## Defines coordinates for the categories labels
 categories <- tibble(
+  race = c(rep("white",3),rep("black",3)),
   y = rep(c(6,16,26),2)
 ) %>% 
   dplyr::mutate(x = c(40, 80, 88, -40, -80, -88),
@@ -63,21 +65,51 @@ categories <- tibble(
                 label = rep(unique(df$capital),2)) %>% 
   dplyr::mutate(label = toupper(label),
                 label = stringr::str_wrap(label, width = 8))
-  
+
 ## Defines the breaks for the x-axis
 x_breaks <- c(
   seq(-100, -10, by = 10),
   seq(10, 100, by = 10)
 )
 
+## Defines the titles and message
+title <- "CAPITAL OF CANDIDATURES FOR THE LOWER HOUSE\nOF THE BRAZILIAN CONGRESS BY RACE AND STATE."
+subtitle <- "
+THIS DATA IS FROM 2018 AND THE CURRENCY IS BRAZILIAN REAIS (BRL). FOR COMPARISSON, ONE US DOLLAR THIS YEAR WAS WORTH 3.65 BRL IN AVERAGE.
+STATES ARE ORDERED BY SIMILARITY OF THE PERCENTAGES (USING BOND ENERGY AND TRAVELING SALESPERSON ALGORITHM).
+INSPIRED BY: W.E.B. DU BOIS | DATA FROM: IBGE | GRAPHIC BY: ÍCARO BERNARDES (@IcaroBSC)
+"
+message <- "
+ALL WHITE CANDIDATURES TOGETHER RECEIVED ALMOST 285M USD WHILE BLACK ONES RECEIVED 86M USD.<br>
+THIS IS LESS THAN <span style = color:'white';font-size:80px;>A THIRD</span> OF WHAT WHITES OBTAINED.
+"
+
+# 2. Generates the plot
+## Creates the main plot
 p <- df %>% 
   ggplot() +
+  
+  ### Places the bars 
   geom_col(aes(x = percent, y = y, fill = capital), color = "black",
            size = 0.2, width = 1, orientation = "y") +
+  
+  ### Places the labels of the categories
   geom_text(aes(x = x, y = y, label = label, angle = angle),
-            family = sans, size = 18, lineheight = lnhgt, data = categories) +
-  annotate("text", x = c(-50,50), y = 28, label = c("BLACKS.","WHITES."), family = sans) +
+            family = sans, size = 16, lineheight = lnhgt, data = categories) +
+  
+  ### Places a central line that highlights the zero
+  geom_vline(xintercept = 0, size = 0.5) +
+  
+  ### Facets the plot between the two groups
+  facet_grid(.~race, scales = "free_x", labeller = labeller(.cols = ~toupper(glue::glue("{.}S.")))) +
+  
+  ### Places the titles and message
+  labs(title = title, subtitle = subtitle, caption = message) +
+  
+  ### Eliminates excess of elements
   theme_void() +
+  
+  ### Customizes the plot
   theme(
     text = element_text(family = sans),
     axis.line = element_blank(),
@@ -90,16 +122,33 @@ p <- df %>%
                                     margin = margin(t = 0, r = 20, b = 0, l = 0, unit = "pt")),
     axis.text.y.right = element_text(hjust = 0,
                                      margin = margin(t = 0, r = 0, b = 0, l = 20, unit = "pt")),
-    panel.ontop = TRUE,
-    plot.margin = margin(t = 300, r = 70, b = 200, l = 70, unit = "pt"),
+    plot.margin = margin(t = 80, r = 70, b = 20, l = 70, unit = "pt"),
     plot.background = element_rect(fill = bgcolor, color = NA),
+    plot.title = element_text(size = 90, hjust = 0.5, vjust = 1, lineheight = lnhgt,
+                              margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt")),
+    plot.subtitle = element_text(size = 30, hjust = 0.5, vjust = 1, lineheight = 0.9,
+                                 margin = margin(t = 10, r = 0, b = 50, l = 0, unit = "pt")),
+    plot.caption = ggtext::element_textbox(
+      size = 45, halign = 0.5, valign = 1, lineheight = 1.1, fill = "#654321",
+      color = bgcolor, box.color = NA, width = 2, hjust = 0.5,
+      margin = margin(t = 30, r = 0, b = 30, l = 0, unit = "pt"),
+      padding = margin(t = 30, r = 0, b = 30, l = 0, unit = "pt")
+    ),
+    strip.text = element_text(size = 32,
+                              margin = margin(t = 0, r = 0, b = 5, l = 0, unit = "pt")),
+    panel.ontop = TRUE,
+    panel.spacing = unit(0, "lines"),
     panel.grid.minor.x = element_line(color = "black", size = 0.1),
     panel.grid.major.x = element_line(color = "black", size = 0.2)
   ) +
+  
+  ### Defines the axes scales
   scale_x_continuous(name = "PER CENTS.", breaks = x_breaks, minor_breaks = seq(-100,100,2),
                      labels = abs, expand = expansion(0,0)) +
   scale_y_continuous(name = NULL, breaks = 1:n_distinct(df$state),
                      labels = toupper(order), expand = expansion(0,0), sec.axis = dup_axis()) + 
+  
+  ### Defines the colors of the categories
   scale_fill_discrete(type = c("#00aa00","#dc143c","#4682b4"), guide = "none")
 
 ## Saves the plot

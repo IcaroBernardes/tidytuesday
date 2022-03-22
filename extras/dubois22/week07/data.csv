@@ -1,163 +1,163 @@
 state;race;capital;percent
-Rondônia;white;less than 100k;72
-Rondônia;white;100k to 1M;19
-Rondônia;white;more than 1M;9
-Rondônia;black;less than 100k;69
-Rondônia;black;100k to 1M;24
-Rondônia;black;more than 1M;7
-Acre;white;less than 100k;40
-Acre;white;100k to 1M;40
-Acre;white;more than 1M;20
-Acre;black;less than 100k;65
-Acre;black;100k to 1M;27
-Acre;black;more than 1M;7
-Amazonas;white;less than 100k;70
-Amazonas;white;100k to 1M;19
-Amazonas;white;more than 1M;12
-Amazonas;black;less than 100k;83
-Amazonas;black;100k to 1M;12
-Amazonas;black;more than 1M;5
-Roraima;white;less than 100k;74
-Roraima;white;100k to 1M;19
-Roraima;white;more than 1M;7
-Roraima;black;less than 100k;82
-Roraima;black;100k to 1M;16
-Roraima;black;more than 1M;2
-Pará;white;less than 100k;59
-Pará;white;100k to 1M;30
-Pará;white;more than 1M;11
-Pará;black;less than 100k;74
-Pará;black;100k to 1M;19
-Pará;black;more than 1M;7
-Amapá;white;less than 100k;41
-Amapá;white;100k to 1M;52
-Amapá;white;more than 1M;7
-Amapá;black;less than 100k;71
-Amapá;black;100k to 1M;25
-Amapá;black;more than 1M;4
-Tocantins;white;less than 100k;67
-Tocantins;white;100k to 1M;20
-Tocantins;white;more than 1M;13
-Tocantins;black;less than 100k;85
-Tocantins;black;100k to 1M;10
-Tocantins;black;more than 1M;5
-Maranhão;white;less than 100k;64
-Maranhão;white;100k to 1M;23
-Maranhão;white;more than 1M;13
-Maranhão;black;less than 100k;80
-Maranhão;black;100k to 1M;15
-Maranhão;black;more than 1M;5
-Piauí;white;less than 100k;57
-Piauí;white;100k to 1M;33
-Piauí;white;more than 1M;10
-Piauí;black;less than 100k;86
-Piauí;black;100k to 1M;11
-Piauí;black;more than 1M;3
-Ceará;white;less than 100k;71
-Ceará;white;100k to 1M;19
-Ceará;white;more than 1M;11
-Ceará;black;less than 100k;79
-Ceará;black;100k to 1M;17
-Ceará;black;more than 1M;4
-Rio Grande do Norte;white;less than 100k;59
-Rio Grande do Norte;white;100k to 1M;28
-Rio Grande do Norte;white;more than 1M;13
-Rio Grande do Norte;black;less than 100k;84
-Rio Grande do Norte;black;100k to 1M;13
-Rio Grande do Norte;black;more than 1M;3
-Paraíba;white;less than 100k;75
-Paraíba;white;100k to 1M;17
-Paraíba;white;more than 1M;8
-Paraíba;black;less than 100k;72
-Paraíba;black;100k to 1M;22
-Paraíba;black;more than 1M;6
-Pernambuco;white;less than 100k;69
-Pernambuco;white;100k to 1M;15
-Pernambuco;white;more than 1M;16
-Pernambuco;black;less than 100k;88
-Pernambuco;black;100k to 1M;11
-Pernambuco;black;more than 1M;2
-Alagoas;white;less than 100k;59
-Alagoas;white;100k to 1M;33
-Alagoas;white;more than 1M;9
-Alagoas;black;less than 100k;76
-Alagoas;black;100k to 1M;14
-Alagoas;black;more than 1M;10
-Sergipe;white;less than 100k;70
-Sergipe;white;100k to 1M;19
-Sergipe;white;more than 1M;11
-Sergipe;black;less than 100k;85
-Sergipe;black;100k to 1M;13
-Sergipe;black;more than 1M;3
-Bahia;white;less than 100k;68
-Bahia;white;100k to 1M;17
-Bahia;white;more than 1M;15
-Bahia;black;less than 100k;80
-Bahia;black;100k to 1M;17
-Bahia;black;more than 1M;3
-Minas Gerais;white;less than 100k;69
-Minas Gerais;white;100k to 1M;18
-Minas Gerais;white;more than 1M;13
-Minas Gerais;black;less than 100k;89
-Minas Gerais;black;100k to 1M;9
-Minas Gerais;black;more than 1M;2
-Espírito Santo;white;less than 100k;64
-Espírito Santo;white;100k to 1M;23
-Espírito Santo;white;more than 1M;13
-Espírito Santo;black;less than 100k;86
-Espírito Santo;black;100k to 1M;13
-Espírito Santo;black;more than 1M;2
-Rio de Janeiro;white;less than 100k;81
-Rio de Janeiro;white;100k to 1M;13
-Rio de Janeiro;white;more than 1M;7
-Rio de Janeiro;black;less than 100k;88
-Rio de Janeiro;black;100k to 1M;11
-Rio de Janeiro;black;more than 1M;1
-São Paulo;white;less than 100k;74
-São Paulo;white;100k to 1M;18
-São Paulo;white;more than 1M;7
-São Paulo;black;less than 100k;90
-São Paulo;black;100k to 1M;8
-São Paulo;black;more than 1M;2
-Paraná;white;less than 100k;74
-Paraná;white;100k to 1M;17
-Paraná;white;more than 1M;9
-Paraná;black;less than 100k;95
-Paraná;black;100k to 1M;4
-Paraná;black;more than 1M;2
-Santa Catarina;white;less than 100k;72
-Santa Catarina;white;100k to 1M;21
-Santa Catarina;white;more than 1M;8
-Santa Catarina;black;less than 100k;80
-Santa Catarina;black;100k to 1M;20
-Santa Catarina;black;more than 1M;0
-Rio Grande do Sul;white;less than 100k;76
-Rio Grande do Sul;white;100k to 1M;17
-Rio Grande do Sul;white;more than 1M;8
-Rio Grande do Sul;black;less than 100k;94
-Rio Grande do Sul;black;100k to 1M;6
-Rio Grande do Sul;black;more than 1M;0
-Mato Grosso do Sul;white;less than 100k;69
-Mato Grosso do Sul;white;100k to 1M;23
-Mato Grosso do Sul;white;more than 1M;9
-Mato Grosso do Sul;black;less than 100k;80
-Mato Grosso do Sul;black;100k to 1M;20
-Mato Grosso do Sul;black;more than 1M;0
-Mato Grosso;white;less than 100k;56
-Mato Grosso;white;100k to 1M;24
-Mato Grosso;white;more than 1M;20
-Mato Grosso;black;less than 100k;76
-Mato Grosso;black;100k to 1M;23
-Mato Grosso;black;more than 1M;1
-Goiás;white;less than 100k;62
-Goiás;white;100k to 1M;23
-Goiás;white;more than 1M;15
-Goiás;black;less than 100k;94
-Goiás;black;100k to 1M;6
-Goiás;black;more than 1M;0
-Distrito Federal;white;less than 100k;70
-Distrito Federal;white;100k to 1M;20
-Distrito Federal;white;more than 1M;9
-Distrito Federal;black;less than 100k;74
-Distrito Federal;black;100k to 1M;22
-Distrito Federal;black;more than 1M;5
+Rondônia;white;less than 100k;72,3404
+Rondônia;white;100k to 1M;19,1489
+Rondônia;white;more than 1M;8,5106
+Rondônia;black;less than 100k;69,0909
+Rondônia;black;100k to 1M;23,6364
+Rondônia;black;more than 1M;7,2727
+Acre;white;less than 100k;40,0000
+Acre;white;100k to 1M;40,0000
+Acre;white;more than 1M;20,0000
+Acre;black;less than 100k;65,4545
+Acre;black;100k to 1M;27,2727
+Acre;black;more than 1M;7,2727
+Amazonas;white;less than 100k;69,7674
+Amazonas;white;100k to 1M;18,6047
+Amazonas;white;more than 1M;11,6279
+Amazonas;black;less than 100k;82,7160
+Amazonas;black;100k to 1M;12,3457
+Amazonas;black;more than 1M;4,9383
+Roraima;white;less than 100k;73,8095
+Roraima;white;100k to 1M;19,0476
+Roraima;white;more than 1M;7,1429
+Roraima;black;less than 100k;81,6092
+Roraima;black;100k to 1M;16,0920
+Roraima;black;more than 1M;2,2989
+Pará;white;less than 100k;58,6957
+Pará;white;100k to 1M;30,4348
+Pará;white;more than 1M;10,8696
+Pará;black;less than 100k;74,0741
+Pará;black;100k to 1M;18,5185
+Pará;black;more than 1M;7,4074
+Amapá;white;less than 100k;40,7407
+Amapá;white;100k to 1M;51,8519
+Amapá;white;more than 1M;7,4074
+Amapá;black;less than 100k;71,0843
+Amapá;black;100k to 1M;25,3012
+Amapá;black;more than 1M;3,6145
+Tocantins;white;less than 100k;66,6667
+Tocantins;white;100k to 1M;20,0000
+Tocantins;white;more than 1M;13,3333
+Tocantins;black;less than 100k;84,6154
+Tocantins;black;100k to 1M;10,2564
+Tocantins;black;more than 1M;5,1282
+Maranhão;white;less than 100k;64,2857
+Maranhão;white;100k to 1M;22,8571
+Maranhão;white;more than 1M;12,8571
+Maranhão;black;less than 100k;80,3738
+Maranhão;black;100k to 1M;14,9533
+Maranhão;black;more than 1M;4,6729
+Piauí;white;less than 100k;56,8966
+Piauí;white;100k to 1M;32,7586
+Piauí;white;more than 1M;10,3448
+Piauí;black;less than 100k;85,7143
+Piauí;black;100k to 1M;11,4286
+Piauí;black;more than 1M;2,8571
+Ceará;white;less than 100k;70,5882
+Ceará;white;100k to 1M;18,6275
+Ceará;white;more than 1M;10,7843
+Ceará;black;less than 100k;78,9063
+Ceará;black;100k to 1M;17,1875
+Ceará;black;more than 1M;3,9063
+Rio Grande do Norte;white;less than 100k;59,0164
+Rio Grande do Norte;white;100k to 1M;27,8689
+Rio Grande do Norte;white;more than 1M;13,1148
+Rio Grande do Norte;black;less than 100k;84,2105
+Rio Grande do Norte;black;100k to 1M;13,1579
+Rio Grande do Norte;black;more than 1M;2,6316
+Paraíba;white;less than 100k;75,2809
+Paraíba;white;100k to 1M;16,8539
+Paraíba;white;more than 1M;7,8652
+Paraíba;black;less than 100k;72,0000
+Paraíba;black;100k to 1M;22,0000
+Paraíba;black;more than 1M;6,0000
+Pernambuco;white;less than 100k;68,7943
+Pernambuco;white;100k to 1M;14,8936
+Pernambuco;white;more than 1M;16,3121
+Pernambuco;black;less than 100k;87,6106
+Pernambuco;black;100k to 1M;10,6195
+Pernambuco;black;more than 1M;1,7699
+Alagoas;white;less than 100k;58,6957
+Alagoas;white;100k to 1M;32,6087
+Alagoas;white;more than 1M;8,6957
+Alagoas;black;less than 100k;75,8621
+Alagoas;black;100k to 1M;13,7931
+Alagoas;black;more than 1M;10,3448
+Sergipe;white;less than 100k;70,2703
+Sergipe;white;100k to 1M;18,9189
+Sergipe;white;more than 1M;10,8108
+Sergipe;black;less than 100k;84,7222
+Sergipe;black;100k to 1M;12,5000
+Sergipe;black;more than 1M;2,7778
+Bahia;white;less than 100k;68,0672
+Bahia;white;100k to 1M;16,8067
+Bahia;white;more than 1M;15,1261
+Bahia;black;less than 100k;79,5848
+Bahia;black;100k to 1M;16,9550
+Bahia;black;more than 1M;3,4602
+Minas Gerais;white;less than 100k;68,7927
+Minas Gerais;white;100k to 1M;18,4510
+Minas Gerais;white;more than 1M;12,7563
+Minas Gerais;black;less than 100k;88,8889
+Minas Gerais;black;100k to 1M;9,4771
+Minas Gerais;black;more than 1M;1,6340
+Espírito Santo;white;less than 100k;63,8298
+Espírito Santo;white;100k to 1M;23,4043
+Espírito Santo;white;more than 1M;12,7660
+Espírito Santo;black;less than 100k;85,7143
+Espírito Santo;black;100k to 1M;12,6984
+Espírito Santo;black;more than 1M;1,5873
+Rio de Janeiro;white;less than 100k;80,8271
+Rio de Janeiro;white;100k to 1M;12,5940
+Rio de Janeiro;white;more than 1M;6,5789
+Rio de Janeiro;black;less than 100k;88,1818
+Rio de Janeiro;black;100k to 1M;10,6818
+Rio de Janeiro;black;more than 1M;1,1364
+São Paulo;white;less than 100k;74,0887
+São Paulo;white;100k to 1M;18,4236
+São Paulo;white;more than 1M;7,4877
+São Paulo;black;less than 100k;90,3581
+São Paulo;black;100k to 1M;7,9890
+São Paulo;black;more than 1M;1,6529
+Paraná;white;less than 100k;74,2604
+Paraná;white;100k to 1M;16,5680
+Paraná;white;more than 1M;9,1716
+Paraná;black;less than 100k;94,6429
+Paraná;black;100k to 1M;3,5714
+Paraná;black;more than 1M;1,7857
+Santa Catarina;white;less than 100k;72,0000
+Santa Catarina;white;100k to 1M;20,5000
+Santa Catarina;white;more than 1M;7,5000
+Santa Catarina;black;less than 100k;80,0000
+Santa Catarina;black;100k to 1M;20,0000
+Santa Catarina;black;more than 1M;0,0000
+Rio Grande do Sul;white;less than 100k;75,5682
+Rio Grande do Sul;white;100k to 1M;16,7614
+Rio Grande do Sul;white;more than 1M;7,6705
+Rio Grande do Sul;black;less than 100k;94,1176
+Rio Grande do Sul;black;100k to 1M;5,8824
+Rio Grande do Sul;black;more than 1M;0,0000
+Mato Grosso do Sul;white;less than 100k;68,7500
+Mato Grosso do Sul;white;100k to 1M;22,5000
+Mato Grosso do Sul;white;more than 1M;8,7500
+Mato Grosso do Sul;black;less than 100k;80,4878
+Mato Grosso do Sul;black;100k to 1M;19,5122
+Mato Grosso do Sul;black;more than 1M;0,0000
+Mato Grosso;white;less than 100k;55,9322
+Mato Grosso;white;100k to 1M;23,7288
+Mato Grosso;white;more than 1M;20,3390
+Mato Grosso;black;less than 100k;75,7143
+Mato Grosso;black;100k to 1M;22,8571
+Mato Grosso;black;more than 1M;1,4286
+Goiás;white;less than 100k;61,9048
+Goiás;white;100k to 1M;23,0159
+Goiás;white;more than 1M;15,0794
+Goiás;black;less than 100k;93,9759
+Goiás;black;100k to 1M;6,0241
+Goiás;black;more than 1M;0,0000
+Distrito Federal;white;less than 100k;70,4545
+Distrito Federal;white;100k to 1M;20,4545
+Distrito Federal;white;more than 1M;9,0909
+Distrito Federal;black;less than 100k;73,8636
+Distrito Federal;black;100k to 1M;21,5909
+Distrito Federal;black;more than 1M;4,5455
