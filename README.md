@@ -8,29 +8,7 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
 
 ### #DuBoisChallenge2022
-### Week 07 - Racial inequality (Political candidatures financing)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week07/week07.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week07/congress.png)
-
-### Week 06 - Racial inequality (Illiteracy)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week06/week06.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week06/illiteracy.png)
-
-### Week 05 - Racial inequality (Managerial job positions)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week05/week05.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week05/managers.png)
-
-### Week 04 - Racial inequality (Real income of people in informal jobs)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week04/week04.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week04/incomes.png)
-
-### Week 03 - Racial inequality (Mobile phones and internet access)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/extras/dubois22/2022/week03/week03.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week03/access.png)
-
-#### Week 02 - Racial inequality (Real income of households)
-Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week02/week02.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/dubois22/week02/income.png)
+All Du Bois related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2022
 ### Week 12 - Baby names
