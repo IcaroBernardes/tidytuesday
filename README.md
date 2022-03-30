@@ -11,11 +11,13 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 All Du Bois related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2022
+
+
 ### Week 12 - Baby names
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week12/week12.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week12/names.png)
 
-### Week 11 - R vignettes
+### Week 11 - CRAN/BIOC Vignettes
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week11/week11.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week11/vignettes.png)
 
