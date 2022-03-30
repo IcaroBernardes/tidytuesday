@@ -24,8 +24,8 @@ showtext::showtext_auto()
 clrM <- "#0184e3"
 clrF <- "#a21ba7"
 lnght <- 0.9
-width <- 35
-height <- 40
+width <- 23
+height <- 28
 cards_clr <- "#95E63B"
 line_clr <- colorspace::darken(cards_clr, 0.25)
 border_clr <- colorspace::darken(cards_clr, 0.35)
@@ -113,7 +113,7 @@ kpi <- df %>%
   dplyr::mutate(color = ifelse(sex == "men", clrM, clrF))
 
 joiner <- tribble(
-  ~var,      ~x,   ~y,   ~verb,  ~noun,
+  ~var,      ~x,   ~y,    ~verb,  ~noun,
   "partic",  -0.6, -0.75, "make", "participants",
   "expend",  0,    -0.75, "take", "expenses",
   "revenue", 0.6,  -0.75, "give", "revenues"
@@ -125,7 +125,7 @@ kpi <- kpi %>%
                        .fns = toupper)) %>% 
   dplyr::mutate(label = glue::glue(
     "{sex} {verb} MOST<br>OF THE {noun}<br><br>
-    <span style='font-size:30px;color:{color}'>**{value}%**</span>"
+    <span style='font-size:20px;color:{color}'>**{value}%**</span>"
   ))
 
 ## Calculates the summary statistics for each sport and sex
@@ -199,7 +199,7 @@ labels <- tibble(
 ## Defines coordinates for the titles
 titles <- tibble(
   x = 0.03,
-  y = c(0.97,0.92,0.87),
+  y = c(0.97,0.91,0.86),
   label = c(
     "Olympic effort",
     
@@ -214,7 +214,7 @@ titles <- tibble(
     
     "Data from Equity in Athletics Data Analysis | Pictograms: © 2013 Copyright by the Rio de Janeiro Olympic Organizing Committee | Graphic: Ícaro Bernardes (@IcaroBSC)"
   ),
-  size = c(50,12,8)
+  size = c(40,8,5)
 )
 
 # 2. Generates the plot
@@ -227,7 +227,7 @@ cards <- stats_sum %>%
                       by = 'width', asp = width/height, data = pictos) +
   
   ### Places the labels of the stats
-  geom_text(aes(x = x, y = y, label = label), size = 3,
+  geom_text(aes(x = x, y = y, label = label), size = 2,
             fontface = "bold", family = serif, data = labels) +
   
   ### Places the 'background' of the lines of the stats
@@ -239,14 +239,14 @@ cards <- stats_sum %>%
   
   ### Places the values of the stats
   ggtext::geom_richtext(aes(x = xmin*1.01, y = y, hjust = hjust, label = label),
-                        color = "white", size = 3, family = serif,
+                        color = "white", size = 2, family = serif,
                         label.color = NA, fill = NA, nudge_y = -0.005) +
   
   ### Places the mean ratios and the title of this section
-  annotate("text", x = 0, y = -0.45, size = 6,
+  annotate("text", x = 0, y = -0.45, size = 4,
            fontface = "bold", family = serif, lineheight = lnght,
            label = "TYPICAL SPLIT BETWEEN SEXES IN\nTHE INSTITUTIONS (MEAN RATIO)") +
-  ggtext::geom_richtext(aes(x = x, y = y, label = label), size = 3,
+  ggtext::geom_richtext(aes(x = x, y = y, label = label), size = 2,
                         family = serif, label.color = NA, fill = NA, data = kpi) +
   
   ### Applies colors for the sexes
@@ -261,12 +261,12 @@ cards <- stats_sum %>%
   ### Eliminates unnecessary elements and customizes others
   theme_void() +
   theme(
-    strip.text = element_text(family = serif, size = 35, face = "bold", color = "white",
-                              margin = margin(t = 30, r = 0, b = 30, l = 0, unit = "pt")),
+    strip.text = element_text(family = serif, size = 25, face = "bold", color = "white",
+                              margin = margin(t = 20, r = 0, b = 20, l = 0, unit = "pt")),
     strip.background = element_rect(fill = border_clr, color = NA),
     panel.background = element_rect(fill = cards_clr, color = border_clr,
                                     size = 7),
-    panel.spacing = unit(50, "pt")
+    panel.spacing = unit(40, "pt")
   )
 
 ## Creates the main plot
@@ -278,7 +278,7 @@ p <- ggplot(NULL) +
                         fill = NA, lineheight = lnght, data = titles) +
   
   ### Places the medal icon
-  ggimage::geom_image(aes(x = x, y = y, image = image), size = 0.17,
+  ggimage::geom_image(aes(x = x, y = y, image = image), size = 0.19,
                       by = 'width', asp = width/height, data = medal) +
   
   ### Defines unitary plots limits
@@ -295,7 +295,7 @@ p <- ggplot(NULL) +
                            left = 0.03,
                            right = 0.97,
                            bottom = 0.03,
-                           top = 0.85)
+                           top = 0.84)
 
 ## Saves the plot
 ggsave("2022/week13/sports.png", plot = p, dpi = "retina",
