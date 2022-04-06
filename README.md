@@ -11,6 +11,10 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 All Du Bois related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2022
+### Week 14 - Publications List
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week14/week14.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week14/tree.png)
+
 ### Week 13 - Collegiate Sports Budgets
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week13/week13.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week13/sports.png)
