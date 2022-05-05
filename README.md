@@ -3,6 +3,10 @@
 This is my space to experiment with Data Viz and Data Handling! Feel free to copy any solutions that you find, but please inform me if you want to feature the plots somewhere!
 
 ## Extras
+### Star Wars
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/starwars/cardboards/cardboards.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/starwars/cardboards/cardboards.png)
+
 ### Beer Project
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
