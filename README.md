@@ -43,9 +43,13 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week10/week10
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/week08.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week08/fuels.png)
 
-### Week 05 - Tuskegee Airmen (#DuBoisChallenge2022)
+### Week 06 - Tuskegee Airmen (#DuBoisChallenge2022)
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/week06.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/strikes.png)
+
+### Week 05 - Dog breeds
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/week05.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/strikes.png)
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/traits.png)
 
 ## 2021
 ### Week 51 - Spice Girls
