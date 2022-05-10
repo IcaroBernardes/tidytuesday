@@ -1,270 +1,317 @@
 # 0. Library and fonts management
 library(tidyverse)
-library(ggplot2)
-library(showtext)
-library(tidytuesdayR)
+library(ragg)
 library(glue)
-library(lubridate)
+library(FactoMineR)
+library(factoextra)
 library(ggtext)
-library(emojifont)
-
-## Adding Google Fonts
-sysfonts::font_add_google(name = "Teko", family = "teko") ### Sans Serif
-sans <- "teko"
-
-## Allows the use of the downloaded Google Font
-## To see the results updated, it's needed to call windows() or save the image
-showtext::showtext_opts(dpi = 320)
-showtext::showtext_auto()
-
-# 1. Data download, load and handling
-airmen <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-08/airmen.csv')
-
-## Selects the data
-df <- airmen %>%
-  dplyr::distinct(name, graduation_date, .keep_all = TRUE) %>% 
-  dplyr::mutate(id = 1:n()) %>% 
-  dplyr::rename("grad" = "graduation_date",
-                "details" = "aerial_victory_credits",
-                "victories" = "number_of_aerial_victory_credits") %>% 
-  dplyr::select(id, grad, details, victories)
-
-## Calculates the max number of different strikes a pilot downed planes
-max_strikes <- df %>% 
-  dplyr::transmute(strikes = str_count(details, ";")+1) %>% 
-  dplyr::summarise(strikes = max(strikes, na.rm = TRUE)) %>% 
-  dplyr::pull()
-
-## Defines quantities limits
-lim_vict <- 0
-lim_date <- lubridate::ymd("1949-12-31")
-
-## Extracts for each strike the humber of downed planes and date
-df <- df %>% 
-  dplyr::mutate(victories = round(victories)) %>% 
-  dplyr::group_by(id) %>% 
-  tidyr::nest() %>% 
-  dplyr::mutate(data = data %>% purrr::map(
-    ~.x %>%
-      tidyr::separate(col = details,
-                      into = glue::glue("strike{1:max_strikes}"),
-                      sep = ";") %>% 
-      tidyr::pivot_longer(cols = starts_with("strike"),
-                          names_to = "number",
-                          values_to = "event") %>% 
-      tidyr::separate(col = event,
-                      into = c("downed","date"),
-                      sep = "on") %>% 
-      dplyr::mutate(across(.cols = c(downed, date), .fns = stringr::str_trim)) %>% 
-      dplyr::mutate(downed = stringr::str_sub(downed, 8L, 8L),
-                    downed = as.numeric(downed)) %>% 
-      dplyr::mutate(year = stringr::str_sub(date, -4L, -1L),
-                    month = str_extract(date, paste0(month.name, collapse = "|")),
-                    day = str_remove(date, glue::glue(", {year}")),
-                    day = str_remove(day, month),
-                    month = match(month, month.name),
-                    date = lubridate::ymd(glue::glue("{year}-{month}-{day}"))) %>% 
-      dplyr::select(-year,-month,-day) %>% 
-      dplyr::mutate(downed = if(victories[1] == 0){c(lim_vict,rep(NA,max_strikes-1))}else{downed},
-                    date = if(victories[1] == 0){c(lim_date,rep(NA,max_strikes-1))}else{date}) %>% 
-      na.exclude() %>% 
-      dplyr::mutate(cumulative = cumsum(downed))
-  )) %>% 
-  tidyr::unnest(cols = data) %>% 
-  dplyr::ungroup()
-
-## Calculates the cumulative count of downed planes
-strikes <- df %>% 
-  dplyr::filter(downed != 0) %>% 
-  dplyr::arrange(date) %>% 
-  dplyr::mutate(cumulative = cumsum(downed)) %>% 
-  dplyr::select(date, cumulative)
-
-## Gets the number ot total downed planes
-total_downed <- strikes %>% dplyr::slice(n()) %>% dplyr::pull(cumulative)
+library(ggfx)
+library(ggimage)
+library(magick)
 
 ## Defines some layout constants
-lnhgt <- 0.28
-bgcolor <- "#dacbb8"
-gridcolor <- "#cf7269"
-top_grid <- 120
-legend_pos <- seq(3,23,5)
+lnhgt <- 1.2 ### To set the lineheight
+width <- 26 ### Width of the plot
+height <- 26 ### Height of the plot
+bgcolor <- "#0F9EB3" ### Color of the background
 
-## Defines coordinates for the start and end of the timeline
-## as well as joints to cover the empty space between the geom_step
-start <- tibble(
-  date = lubridate::ymd("1940-1-1"),
-  cumulative = 0
-) %>% 
-  rbind(strikes[1,])
+## Defines the fonts. Downloaded from https://fontmeme.com and https://fonts.google.com
+font_dog <- "Ennobled Pet"
+font_title <- "Ubuntu"
+font_body <- "Bitter"
+font_icons <- "FontAwesome"
+font_photos <- "Permanent Marker"
 
-end <- tibble(
-  date = lubridate::ymd("1949-1-1"),
-  cumulative = total_downed
-) %>% 
-  rbind(strikes %>% dplyr::slice(n()))
+# 1. Data download, load and handling
+trait_description <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/trait_description.csv')
+breed_rank_all <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_rank.csv')
+df <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_traits.csv')
 
-joints <- strikes %>% 
-  dplyr::slice(1L,n())
+## Makes the breeds as the rownames
+df <- df %>% tibble::column_to_rownames(var = "Breed")
 
-## Defines coordinates for the plot grid
-gridX <- tibble(
-  y = seq(0,top_grid,5),
-  xmin = lubridate::ymd("1940-1-1"),
-  xmax = lubridate::ymd("1949-1-1")
-) %>% 
-  dplyr::mutate(color = ifelse(row_number() == 1L | row_number() == n(),
-                               "black",
-                               gridcolor))
+## Takes the "Plott Hounds" breed out of the data
+## as their values are out of scale (equal to zero)
+df <- df %>% dplyr::filter(if_all(.fns = ~(. != 0)))
 
-gridY <- tibble(
-  x = lubridate::ymd(c(glue::glue("{1940:1949}-1-1"),glue::glue("{1940:1948}-7-1"))),
-  ymin = 0,
-  ymax = top_grid
-) %>% 
-  dplyr::arrange(x) %>% 
-  dplyr::mutate(color = ifelse(row_number() == 1L | row_number() == n(),
-                               "black",
-                               gridcolor))
+## Eliminates the "Coat Type" variable (too many categories)
+df <- df %>% dplyr::select(-"Coat Type")
 
-## Defines coordinates for the grid on the legend on the left of the plot
-legendX <- tibble(
-  y = seq(0,top_grid,5),
-  xmin = lubridate::ymd("1937-1-1"),
-  xmax = lubridate::ymd("1939-1-1")
-) %>% 
-  dplyr::mutate(color = ifelse(row_number() == 1L | row_number() == n(),
-                               "black",
-                               gridcolor))
+## Converts all variables to characters
+df <- df %>% dplyr::mutate(across(.fns = as.character))
 
-legendY <- tibble(
-  x = lubridate::ymd(c("1937-1-1","1939-1-1")),
-  ymin = 0,
-  ymax = top_grid,
-  color = "black"
-)
+## Gets the breakdown of the categories for each variable
+df %>% 
+  tidyr::pivot_longer(cols = everything(),
+                      names_to = "category") %>% 
+  dplyr::count(category, value) %>% 
+  ggplot(aes(x = n, y = value)) +
+  geom_col() +
+  facet_wrap(~category, scales = "free_y")
 
-## Defines coordinates for the numbers, ticks, icons
-## and title on the legend on the left of the plot
-legendNUM <- tibble(
-  x = lubridate::ymd("1938-1-1"),
-  y = legendX$y[legend_pos],
-  label = legendX$y[legend_pos],
-)
+## Shows the relative amounts of each category compared to the biggest one
+df %>% 
+  tidyr::pivot_longer(cols = everything(),
+                      names_to = "category") %>% 
+  dplyr::count(category, value) %>% 
+  dplyr::group_by(category) %>% 
+  dplyr::mutate(rel = n/max(n)) %>% 
+  ggplot(aes(x = rel, y = value)) +
+  geom_col() +
+  geom_vline(xintercept = 0.1, color = "red") +
+  facet_wrap(~category, scales = "free_y")
 
-legendTICKS <- tibble(
-  y = legendNUM$y,
-  xmin = lubridate::ymd("1939-2-1"),
-  xmax = lubridate::ymd("1940-1-1"),
-  color = gridcolor
-)
+## Reduces the scale of the ordinal traits
+## and creates a common label for all traits
+df <- df %>% 
+  dplyr::mutate(across(
+    .fns = ~case_when(. %in% c("1", "2", "Short") ~ "Bellow mid-scale",
+                      . %in% c("4", "5", "Long") ~ "Above mid-scale",
+                      . %in% c("3", "Medium") ~ "Mid-scale",
+                      TRUE ~ "?")
+  ))
 
-legendICON <- tibble(
-  x = lubridate::ymd("1937-7-1"),
-  y = legendX$y[legend_pos-1],
-  label = fontawesome("fa-plane"),
-)
+## Makes the Multiple Correspondence Analysis for the data
+res.mca <- FactoMineR::MCA(df, graph = FALSE)
 
-legendTITLE <- tibble(
-  x = lubridate::ymd("1938-1-1"),
-  y = top_grid-0.3,
-  label = "DOWNED<br>ENEMY PLANES",
-)
+## Shows the amount of variability that the first dimensions hold
+factoextra::fviz_screeplot(res.mca, addlabels = TRUE, ylim = c(0, 12), ncp = 5)
 
-## Defines coordinates for the numbers on the horizontal axis
-axisX <- tibble(
-  x = lubridate::ymd(glue::glue("{1940:1949}-1-1")),
-  y = -2,
-  label = 1940:1949,
-)
+## Gets the set of categories and dimensions that have a
+## cos2 equal or superior to 0.3 so they are somewhat well represented
+var.mca <- factoextra::get_mca_var(res.mca)
+var.cos2 <- var.mca$cos2 %>% 
+  dplyr::as_tibble()
+var.cos2 <- var.cos2 %>% 
+  dplyr::mutate(categ = rownames(var.mca$cos2)) %>%
+  dplyr::select(categ, where(~ max(.x) >= 0.3)) %>% 
+  dplyr::filter(if_any(.cols = where(is.numeric),
+                       .fns = ~(. >= 0.3))) %>% 
+  tidyr::pivot_longer(cols = starts_with("Dim"),
+                      names_to = "Dim",
+                      values_to = "cos2") %>% 
+  dplyr::group_by(categ) %>% 
+  dplyr::filter(cos2 == max(cos2)) %>% 
+  dplyr::ungroup()
+pcs <- unique(var.cos2$Dim)
 
-## Defines coordinates for the insights on the timeline
-insights <- tibble(
-  x = lubridate::ymd(c("1941-1-1"),
-                     c("1943-7-1"),
-                     c("1944-9-15"),
-                     c("1945-1-1"),
-                     c("1947-12-1")),
-  y = c(4,17,42,92,115),
-  angle = c(0,90,0,0,0),
-  hjust = c(0.5,0.5,0,1,0.5),
-  label = c(glue::glue("TUSKGEE AIRMEN<br>GROUP IS CREATED"),
-            glue::glue("FIRST MISSION IN EUROPE"),
-            glue::glue("AWARDED<br>ITALIAN CAMPAIGN"),
-            glue::glue("COMPLETE VICTORIES<br>AGAINST GERMAN FIGHTERS"),
-            glue::glue("TUSKGEE AIRMEN<br>GROUP IS DISMISSED"))
-)
+## Gets the contribution and coordinate for these categories
+## in the component in which they are best represented
+var.contrib <- var.mca$contrib %>% 
+  dplyr::as_tibble()
+var.contrib <- var.contrib %>% 
+  dplyr::mutate(categ = rownames(var.mca$contrib)) %>% 
+  tidyr::pivot_longer(cols = starts_with("Dim"),
+                      names_to = "Dim",
+                      values_to = "contrib")
+var.coord <- var.mca$coord %>% 
+  dplyr::as_tibble()
+var.coord <- var.coord %>% 
+  dplyr::mutate(categ = rownames(var.mca$coord)) %>% 
+  tidyr::pivot_longer(cols = starts_with("Dim"),
+                      names_to = "Dim",
+                      values_to = "coord")
+var.info <- var.cos2 %>% 
+  dplyr::left_join(var.contrib) %>% 
+  dplyr::left_join(var.coord)
 
-## Defines coordinates for the titles
-title <- tibble(
-  x = lubridate::ymd("1943-1-1"),
-  y = c(top_grid+20,top_grid+5),
-  size = c(36,11),
-  label = c(glue::glue("CUMULATIVE AERIAL VICTORIES CREDITED TO<br>PILOTS OF THE TUSKGEE AIRMEN."),
-            glue::glue("INSPIRATED BY: W.E.B. DU BOIS | DATA FROM: COMMEMORATIVE AIRFORCE (CAF)
-                       BY WAY OF THE VA-TUG | GRAPHIC BY: ÍCARO BERNARDES (@IcaroBSC)")),
-)
+## Gets the breeds that are somewhat well represented by the chosen dimensions
+ind.mca <- factoextra::get_mca_ind(res.mca)
+ind.cos2 <- ind.mca$cos2 %>% 
+  dplyr::as_tibble()
+ind.cos2 <- ind.cos2 %>% 
+  dplyr::mutate(Breed = rownames(ind.mca$cos2)) %>%
+  dplyr::select(Breed, all_of(pcs)) %>% 
+  dplyr::filter(if_any(.cols = where(is.numeric),
+                       .fns = ~(. >= 0.3))) %>% 
+  tidyr::pivot_longer(cols = starts_with("Dim"),
+                      names_to = "Dim",
+                      values_to = "cos2") %>% 
+  dplyr::group_by(Breed) %>% 
+  dplyr::filter(cos2 >= 0.3) %>% 
+  dplyr::ungroup()
 
-## Creates the main plot
-p <- strikes %>% 
-  ggplot() +
-  
-  ### Places the plot grid
-  geom_linerange(aes(y = y, xmin = xmin, xmax = xmax, color = I(color)), data = gridX) +
-  geom_linerange(aes(x = x, ymin = ymin, ymax = ymax, color = I(color)), data = gridY) +
-  
-  ### Places the legend grid and ticks
-  geom_linerange(aes(y = y, xmin = xmin, xmax = xmax, color = I(color)), data = legendX) +
-  geom_linerange(aes(x = x, ymin = ymin, ymax = ymax, color = I(color)), data = legendY) +
-  geom_linerange(aes(y = y, xmin = xmin, xmax = xmax, color = I(color)), data = legendTICKS) +
-  
-  ### Places the legend title, numbers and ticks
-  ggtext::geom_richtext(aes(x = x, y = y, label = label), fill = NA,
-                        label.colour = NA, size = 11, vjust = 1,
-                        family = sans, lineheight = lnhgt,
-                        data = legendTITLE) +
-  ggtext::geom_richtext(aes(x = x, y = y, label = label), fill = bgcolor,
-                        label.colour = NA, size = 27, family = sans,data = legendNUM) +
-  ggtext::geom_richtext(aes(x = x, y = y, label = label), fill = bgcolor,
-                        label.colour = NA, angle = -180, size = 15,
-                        family = "fontawesome-webfont", data = legendICON) +
-  
-  ### Places the horizontal axis numbers
-  ggtext::geom_richtext(aes(x = x, y = y, label = label), fill = NA,
-                        label.colour = NA, size = 12, vjust = 1,
-                        family = sans, data = axisX) +
-  
-  ### Places the timeline insights
-  ggtext::geom_richtext(aes(x = x, y = y, label = label, angle = angle, hjust = hjust),
-                        fill = bgcolor, label.colour = NA, size = 14,
-                        lineheight = lnhgt, family = sans, data = insights) +
-  
-  ### Places the plot titles
-  ggtext::geom_richtext(aes(x = x, y = y, label = label, size = I(size)),
-                        fill = NA, label.colour = NA, vjust = 1,
-                        family = sans, lineheight = lnhgt, data = title) +
-  
-  ### Places the joints between the geom_step
-  geom_point(aes(x = date, y = cumulative), size = 7,
-             fill = "black", shape = 22, data = joints) +
-  
-  ### Places the cumulative count of downed planes
-  geom_step(aes(x = date, y = cumulative), size = 7, data = strikes) +
-  
-  ### Places extensions of the cumulative timeline
-  ### which represent the start and end of the Tuskgee Airmen force
-  geom_step(aes(x = date, y = cumulative), size = 7, data = start) +
-  geom_step(aes(x = date, y = cumulative), size = 5, color = bgcolor, data = start) +
-  geom_step(aes(x = date, y = cumulative), size = 7, data = end) +
-  geom_step(aes(x = date, y = cumulative), size = 5, color = bgcolor, data = end) +
-  
-  ### Eliminates unnecesary elements and customizes the plot
-  theme_void() +
-  theme(
-    plot.background = element_rect(fill = bgcolor, color = NA)
+## Gets the contribution and coordinate for these breeds
+## in the component in which they are represented well
+ind.contrib <- ind.mca$contrib %>% 
+  dplyr::as_tibble()
+ind.contrib <- ind.contrib %>% 
+  dplyr::mutate(Breed = rownames(ind.mca$contrib)) %>% 
+  tidyr::pivot_longer(cols = starts_with("Dim"),
+                      names_to = "Dim",
+                      values_to = "contrib")
+ind.coord <- ind.mca$coord %>% 
+  dplyr::as_tibble()
+ind.coord <- ind.coord %>% 
+  dplyr::mutate(Breed = rownames(ind.mca$coord)) %>% 
+  tidyr::pivot_longer(cols = starts_with("Dim"),
+                      names_to = "Dim",
+                      values_to = "coord")
+ind.info <- ind.cos2 %>% 
+  dplyr::left_join(ind.contrib) %>% 
+  dplyr::left_join(ind.coord)
+
+## Creates a simplified version of the name of the breeds
+breed_rank_all <- breed_rank_all %>%
+  dplyr::mutate(joiner = str_remove_all(Breed, "[:punct:]|[:space:]"),
+                joiner = tolower(joiner)) %>%
+  dplyr::select(joiner, `2020 Rank`, Image)
+
+## Keeps only the selected breeds
+ind.info <- ind.info %>%
+  dplyr::mutate(joiner = str_remove_all(Breed, "[:punct:]|[:space:]"),
+                joiner = tolower(joiner))
+breed_rank_all <- breed_rank_all %>%
+  dplyr::filter(joiner %in% ind.info$joiner)
+
+## Gets the images of the dogs and creates a white frame around them
+func <- function(name, rank, url) {
+  img = magick::image_read(url)
+  img = image_modulate(img, brightness = 80)
+  img = magick::image_scale(img, "450")
+  img = magick::image_border(img, color = "white", geometry = "50x50")
+  img = magick::image_extent(img, color = "white", geometry = "x650", gravity = "North")
+  magick::image_write(img, glue::glue("2022/week05/images/{name}.png"))
+}
+purrr::pwalk(breed_rank_all, ~func(..1, ..2, ..3))
+
+## Keeps the path to the local images
+breed_rank_all <- breed_rank_all %>%
+  dplyr::mutate(image = glue::glue("2022/week05/images/{joiner}.png")) %>%
+  dplyr::select(joiner, `2020 Rank`, image)
+
+## Inserts the 2020 popularity rank info and images for the breeds
+ind.info <- ind.info %>%
+  dplyr::left_join(breed_rank_all) %>%
+  dplyr::select(-joiner)
+
+## Defines the text of the footnote
+footnote <- "Data from the American Kennel Club, courtesy of KKakey | Graphic by Ícaro Bernardes (@IcaroBSC)"
+
+## Gives coordinates for the details
+details <- tibble(
+  x = 0.05,
+  y = 0.83,
+  size = 7,
+  label = c(
+    'The American Kennel Club has a trait table for almost two hundred Dog Breeds.<br>
+    Most of them are ordinal traits scaled from 1 to 5 while others are categorical or text-coded ordinal.<br>
+    For this analysis, the ordinal variables were brought to a smaller scale as the extreme categories were lumped together:<br>
+    1 and 2 became "Bellow mid-scale", 3 became "Mid-scale", 4 and 5 became "Above mid-scale".<br>
+    Then, using Multiple Correspondence Analysis, new variables (dimensions) were created as combination of correlated features.<br>
+    These dimensions have no correlation with each other and encompass most of the diversity in the data.<br>
+    Three dimensions (PC 1, 2 and 4) had at least one feature somewhat well represented (with a squared cosine over 0.3).<br><br>
+    <span style="font-size:50px;">**They estimate how much a dog is:**</span>'
   )
+)
+
+## Gives coordinates for the icons and labels of the dimensions
+dims <- tibble(
+  x = 0.11,
+  y = c(0.64,0.43,0.22),
+  icon = c("\uf004","\uf0e7","\uf132"),
+  color = c("#FFB0D9","#F4FFA5","#FFC5A0"),
+  label = c(
+    "<span style='font-size:120px;color:#FFB0D9;'>**Giving**</span><br><br>
+    Whether a dog shows mid-scale or above mid-scale
+    **openness to strangers**, **playfulness level**,
+    **adaptability level** and **affection with the family**.</span>",
+    
+    "<span style='font-size:120px;color:#F4FFA5;'>**Energetic**</span><br><br>
+    Whether a dog shows bellow mid-scale or not
+    **playfulness level** and **energy level**.",
+    
+    "<span style='font-size:120px;color:#FFC5A0;'>**Protective**</span><br><br>
+    Whether a dog shows mid-scale or above mid-scale
+    **watchdog/protective nature**."
+  )
+)
+
+## Defines coordinates for the photos and their labels
+set.seed(42)
+photos <- ind.info %>%
+  dplyr::mutate(coord = ifelse(Dim == "Dim 1", -coord, coord)) %>% 
+  dplyr::mutate(y = case_when(Dim == "Dim 1" ~ 0.54,
+                              Dim == "Dim 2" ~ 0.33,
+                              Dim == "Dim 4" ~ 0.12,
+                              TRUE ~ 0),
+                y = y + sample(seq(-0.02, 0.02, 0.0001), n())) %>% 
+  dplyr::group_by(Dim) %>% 
+  dplyr::mutate(x = seq(0.08, 0.08+0.05*n(), length.out = n())) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(
+    atrib = case_when(Dim == "Dim 1" ~ "giving",
+                      Dim == "Dim 2" ~ "energetic",
+                      Dim == "Dim 4" ~ "protective",
+                      TRUE ~ ""),
+    direc = ifelse(coord > 0, "more", "less"),
+    label = glue::glue("<span style='font-size:6px;'>{Breed}</span><br>
+                                   <span style='font-size:4px;'>{direc} {atrib}</span>"))
+
+## Defines coordinates for the background for the dimensions
+bgdims <- tibble(
+  x = 0.5,
+  y = c(0.59, 0.38, 0.17),
+  fill = c("#a10053", "#b0c702", "#a84200")
+)
+
+# 2. Generates the plot
+## Makes the plot
+p <- ggplot() +
+  
+  ### Places the title and its background
+  annotate("tile", x = 0.5, y = 0.92, width = 1, height = 0.12,
+           fill = "#f2fcfc", color = NA) +
+  annotate("text", x = 0.54, y = 0.92, label = "What makes your\nunique?",
+           fontface = "bold", color = bgcolor, size = 28, hjust = 1,
+           lineheight = 0.9, family = font_title) +
+  annotate("text", x = 0.59, y = 0.925, label = "DOG", color = bgcolor,
+           size = 53, hjust = 0, family = font_dog) +
+  
+  ### Places the footnote and its background
+  annotate("tile", x = 0.5, y = 0.03, width = 1, height = 0.03,
+           fill = "#f2fcfc", color = NA) +
+  annotate("text", x = 0.5, y = 0.03, label = footnote, fontface = "bold",
+           color = bgcolor, size = 8, family = font_title) +
+  
+  ### Places the details
+  ggtext::geom_richtext(aes(x = x, y = y, label = label, size = I(size)),
+                        hjust = 0,
+                        vjust = 1, fill = NA, label.color = NA, color = "white",
+                        family = font_body, lineheight = lnhgt,
+                        data = details) +
+  
+  ### Places the background for the dimensions
+  geom_tile(aes(x = x, y = y, fill = I(fill)), color = NA,
+            width = 1, height = 0.2, data = bgdims) +
+  
+  ### Places the icons, labels and descriptions of the dimensions
+  geom_text(aes(x = x, y = y, label = icon, color = I(color)),
+            family = font_icons, size = 57, data = dims) +
+  ggtext::geom_richtext(aes(x = x, y = y, label = label), size = 8,
+                        nudge_x = 0.07, nudge_y = -0.007, hjust = 0,
+                        fill = NA, label.color = NA, color = "white", 
+                        lineheight = lnhgt, family = font_body, data = dims) +
+  
+  ### Places the photos
+  ggfx::with_shadow(
+    ggimage::geom_image(aes(x = x, y = y, image = image, size = 0.05, group = Breed),
+                        by = "height", asp = width/height, data = photos)
+  ) +
+  
+  ### Places the label of the photos
+  ggtext::geom_richtext(aes(x = x, y = y, label = label), nudge_y = -0.019,
+                        fill = NA, label.color = NA, size = 1,
+                        family = font_photos, data = photos) +
+  
+  ### Defines limits for the axes
+  coord_cartesian(ylim = c(0,1), xlim = c(0,1), expand = FALSE) +
+  
+  ### Eliminates theme elements
+  theme_void()
 
 ## Saves the plot
-ggsave("2022/week05/strikes.png", plot = p, dpi = "retina",
-       width = 23, height = 25)
+ggsave("2022/week05/traits.png", plot = p, dpi = "retina", bg = bgcolor,
+       width = width, height = height, device = ragg::agg_png, res = 320)
+
 
