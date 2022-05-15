@@ -51,6 +51,10 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week06/week06
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/week05.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week05/traits.png)
 
+### Week 03 - Chocolate Bar ratings
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week03/week03.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week03/chocolate.png)
+
 ## 2021
 ### Week 51 - Spice Girls
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2021/week51/week51.R
