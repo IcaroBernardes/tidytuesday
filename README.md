@@ -5,7 +5,6 @@ This is my space to experiment with Data Viz and Data Handling! Feel free to cop
 ## Extras
 ### Votação do Homeschooling no congresso
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/nexo/homeschooling/homeschooling.R
-![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/nexo/homeschooling/homeschooling.png)
 
 ### Star Wars
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/starwars/cardboards/cardboards.R
