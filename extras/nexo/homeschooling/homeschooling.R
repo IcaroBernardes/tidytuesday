@@ -109,7 +109,7 @@ mensagem <- tibble(
   y = 1,
   colour = "black",
   label = c(
-    '<span style="font-size:70px;">**498**</span><span style="font-size:30px;"> deputados percentem à câmara federal</span><br>
+    '<span style="font-size:70px;">**498**</span><span style="font-size:30px;"> deputados pertencem à câmara federal</span><br>
     <span style="font-size:70px;color:#06D157;">**264**</span><span style="font-size:30px;"> deles votaram <span style="color:#06D157;">SIM</span> ao projeto</span>'
   )
 )
