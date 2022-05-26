@@ -127,7 +127,8 @@ subtitle <- paste(
   "Darker <span style='color:red;'>**red stripes**</span> represent",
   "<span style='color:red;'>**loses**</span> with higher point disadvantage.",
   "Darker <span style='color:blue;'>**blue stripes**</span> represent",
-  "<span style='color:blue;'>**wins**</span> with higher point advantage."
+  "<span style='color:blue;'>**wins**</span> with higher point advantage.",
+  "<span style='font-size:15px;'><br><br>Data from ScrumQueens | Graphic by Ícaro Bernardes (@IcaroBSC)</span>"
 )
 
 # 2. Generates the plot
