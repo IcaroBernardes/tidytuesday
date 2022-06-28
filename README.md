@@ -19,6 +19,10 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 All Du Bois related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2022
+### Week 25 - Juneteenth
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week25/week25.R
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week25/sankofa.png)
+
 ### Week 21 - Women's Rugby
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week21/week21.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week21/sevens.png)
