@@ -19,6 +19,14 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 All Du Bois related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2022
+### Week 42 - Stranger things dialogue
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week42/week42.R
+
+Figma: https://www.figma.com/community/file/1167116606133186681
+
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week42/lollipop.png)
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week42/signaling.png)
+
 ### Week 25 - Juneteenth
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week25/week25.R
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week25/sankofa.png)
