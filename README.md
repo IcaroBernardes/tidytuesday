@@ -18,6 +18,12 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 ### #DuBoisChallenge2022
 All Du Bois related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
+## 2023
+### Week 23 - Energy Data
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week23/week23.R
+
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week23/week23.png)
+
 ## 2022
 ### Week 42 - Stranger things dialogue
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2022/week42/week42.R
