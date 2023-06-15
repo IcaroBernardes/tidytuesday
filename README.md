@@ -19,7 +19,12 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 All Du Bois related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2023
-### Week 23 - Energy Data
+### Week 24 - Studying African Farmer-Led Irrigation Survey
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week24/week24.R
+
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week24/week24.png)
+
+### Week 23 - Energy
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week23/week23.R
 
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week23/week23.png)
