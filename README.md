@@ -16,9 +16,14 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 ![](https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/baresbr.png)
 
 ### #DuBoisChallenge2022
-All Du Bois related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
+All Du Bois-related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2023
+### Week 25 - UFO Sightings Redux
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week25/week25.R
+
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week25/week25.png)
+
 ### Week 24 - Studying African Farmer-Led Irrigation Survey
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week24/week24.R
 
