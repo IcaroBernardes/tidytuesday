@@ -6,6 +6,7 @@ library(ggplot2)
 library(ggtext)
 library(ggview)
 library(htmltools)
+library(junebug)
 library(readr)
 library(sf)
 library(stringr)
@@ -32,6 +33,16 @@ shp <- USAboundaries::us_states(
     "Washington", "Arkansas", "Massachusetts",
     "Florida", "District of Columbia")
 )
+
+## Takes all font styles that share that exact family name and
+## registers them (makes them visible to {systemfonts})
+junebug::font_hoist("Font Awesome 6 Brands")
+
+## Gets the info used to register the font families
+fonts_register <- systemfonts::registry_fonts()
+
+## Defines the font families
+brandsFont <- "Font Awesome 6 Brands Regular"
 
 # 1. Data handling ##########
 ## Counts the number of years in which the US
@@ -119,6 +130,26 @@ comment2 <- tagList(
 comment2 <- as.character(comment2) |> 
   stringr::str_remove_all("\n")
 
+## Creates a function that simplifies the process of placing 
+## the Font Awesome glyphs on the text
+faDecoder <- function(code, handle) {
+  tagList(
+    span(code, style = glue::glue("font-family:\"{brandsFont}\";")),
+    handle
+  )
+}
+
+## Defines the authorship
+authorship <- tagList(
+  'Markers data from: Historical Marker Database USA Index', br(),
+  'US wars data from: US Department of Veterans Affairs', br(),
+  'Made by Ícaro Bernardes: ',
+  faDecoder('\uf099', '@IcaroBSC – '),
+  faDecoder('\uf09b', '@IcaroBernardes – '),
+  faDecoder('\uf08c', '@icarobsc')
+)
+authorship <- as.character(authorship)
+
 ## Sets the linewidth vector
 linewidth <- c(1.2, rep(0.3, 25), 1.2, rep(0.3, 19), 1.2, rep(0.3, 2))
 
@@ -146,6 +177,11 @@ plot <- NULL |>
            fill = NA, label.colour = NA, color = "white") +
   annotate("RichText", x = -79, y = 31, label = comment2,
            hjust = 0, size = 3, family = "Nunito",
+           fill = NA, label.colour = NA, color = "white") +
+  
+  ### Places the authorship
+  annotate("RichText", x = -160, y = 27, label = authorship,
+           hjust = 0, vjust = 1, size = 4, family = "Nunito",
            fill = NA, label.colour = NA, color = "white") +
   
   ### Defines aesthetic rules
