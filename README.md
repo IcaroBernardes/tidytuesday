@@ -19,6 +19,11 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 All Du Bois-related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2023
+### Week 27 - Historical Markers
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week27/week27.R
+
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week27/week27.png)
+
 ### Week 25 - UFO Sightings Redux
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week25/week25.R
 
