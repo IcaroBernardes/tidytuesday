@@ -19,6 +19,11 @@ Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/extras/baresbr/bar
 All Du Bois-related plots were moved to another repository: [webdubois: W.E.B. Du Bois Challenge plots](https://github.com/IcaroBernardes/webdubois)
 
 ## 2023
+### Week 29 - GPT detectors
+Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week29/week29.R
+
+![](https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week29/week29.png)
+
 ### Week 28 - Global Surface Temperatures
 Code: https://github.com/IcaroBernardes/tidytuesday/blob/main/2023/week28/week28.R
 
