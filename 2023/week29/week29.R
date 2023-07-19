@@ -110,10 +110,10 @@ plotDetails <- tagList(
   "The heatmap on the right shows the distribution of these texts across", br(),
   "a scale that represents the probability of being made by an AI.", br(),
   "These probabilities were estimated by the GPT detectors.", br(),br(),
-  "These detectors gave to the GPT texts a very low probabilty of being AI-generated.", br(),
-  "On the other hand, texts of non-native English speakers were frequently flagged", br(),
-  "as AI-made. English speakers were frequently flagged as AI-made. Indiscriminate use", br(),
-  "of these tools may not accomplish their purpose while targeting vulnerable groups."
+  "These detectors gave the GPT texts a very low likelihood of being AI-generated.", br(),
+  "On the other hand, texts from non-native English speakers were", br(),
+  "frequently flagged as AI-made. Indiscriminate use of these tools", br(),
+  "may not accomplish their purpose while targeting vulnerable groups."
 )
 plotDetails <- as.character(plotDetails) |> 
   stringr::str_remove_all("\n")
