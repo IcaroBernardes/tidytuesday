@@ -40,6 +40,13 @@ faDecoder <- function(code, handle) {
 bootData <- rawData |> 
   dplyr::select(-crl.tot)
 
+## Brings the values to the 0-1 range
+bootData <- bootData |> 
+  dplyr::mutate(across(
+    .cols = -yesno,
+    .fns = ~./100
+  ))
+
 ## Generates bootstrap samples
 ### Defines the number of bootstrap samples
 nSamples <- 5000
